@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Zebronics GT 740 — 20-metric Comparison Dashboard</title>
+  <meta name="description" content="Interactive single-file dashboard to visualize 20 metrics for Zebronics GT 740 and compare multiple GPUs. Export combined visualization as one image." />
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <!-- html2canvas for exporting combined image -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--muted:#9aa4b2;--accent:#7dd3fc}
+    html,body{height:100%;margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;color:#e6eef6;background:linear-gradient(180deg,#071025 0%, #071827 60%);}
+    .wrap{max-width:1200px;margin:18px auto;padding:18px;}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    h1{font-size:20px;margin:0}
+    p.lead{margin:0;color:var(--muted);font-size:13px}
+    .grid{display:grid;grid-template-columns:1fr 420px;gap:16px;margin-top:16px}
+    .card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);padding:12px;border-radius:12px;box-shadow:0 6px 20px rgba(2,6,23,0.6)}
+    .left{padding:12px}
+    .charts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .full{grid-column:1/3}
+    canvas{background:transparent;border-radius:8px}
+    .controls{display:flex;flex-direction:column;gap:8px}
+    label{font-size:12px;color:var(--muted)}
+    input[type=range]{width:100%}
+    .metrics{max-height:260px;overflow:auto;padding:6px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent)}
+    .metric-row{display:flex;align-items:center;gap:8px;padding:6px;border-bottom:1px dashed rgba(255,255,255,0.02)}
+    .metric-row:last-child{border-bottom:0}
+    .metric-row span{flex:1;color:#cfe8ff;font-size:13px}
+    .btn{padding:8px 10px;border-radius:8px;border:0;background:var(--accent);color:#022;cursor:pointer;font-weight:600}
+    .small{padding:6px 8px;font-size:13px}
+    .footer{margin-top:12px;color:var(--muted);font-size:13px}
+    input[type=file]{color:var(--muted)}
+    .dataset-toggle{display:flex;gap:6px;flex-wrap:wrap}
+    .chip{background:rgba(255,255,255,0.03);padding:6px 8px;border-radius:999px;font-size:12px;color:var(--muted);cursor:pointer}
+    .chip.active{background:linear-gradient(90deg, rgba(125,211,252,0.12), rgba(99,102,241,0.06));color:var(--accent);}
+    @media (max-width:980px){.grid{grid-template-columns:1fr} .charts{grid-template-columns:1fr} .left, .card{padding:8px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Zebronics GT 740 — 20‑Metric Comparison</h1>
+        <p class="lead">Interactive dashboard: combine 20 data metrics into one exportable visual summary. Upload CSV or edit sample data. Toggle normalization, weights, and datasets.</p>
+      </div>
+      <div style="text-align:right">
+        <button id="exportBtn" class="btn">Export Combined Image</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <div class="card left">
+        <div class="charts">
+          <div class="card" style="height:360px">
+            <canvas id="radarChart" aria-label="radar chart" role="img"></canvas>
+          </div>
+
+          <div class="card" style="height:360px;display:flex;flex-direction:column;gap:8px;">
+            <canvas id="polarChart" style="height:170px"></canvas>
+            <canvas id="barChart" style="height:170px"></canvas>
+          </div>
+
+          <div class="card full" style="height:150px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+            <div style="flex:1">
+              <h3 style="margin:0 0 6px 0;font-size:14px">Combined Snapshot</h3>
+              <p style="margin:0;color:var(--muted);font-size:13px">This area shows a mini-visual summary ready for export. Hover the charts to highlight metrics. The final exported image will merge the visible charts into one cohesive picture.</p>
+            </div>
+            <div style="width:300px;text-align:center">
+              <div id="miniCard" class="card" style="padding:10px;background:linear-gradient(180deg, rgba(125,211,252,0.04), transparent);border-radius:10px">
+                <strong id="miniTitle">GT 740</strong>
+                <div style="font-size:12px;color:var(--muted);margin-top:6px">Overall score: <span id="overallScore">—</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="card" style="padding:12px">
+        <div style="display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div style="font-size:14px"><strong>Controls</strong></div>
+          <div style="font-size:12px;color:var(--muted)">Normalize <input id="normToggle" type="checkbox" checked></div>
+        </div>
+
+        <div class="controls">
+          <label class="small">Load CSV (first row = headers, first column = label names)</label>
+          <input type="file" id="csvInput" accept=".csv" />
+
+          <div style="display:flex;gap:8px;margin-top:6px">
+            <button id="loadSample" class="btn small">Load Sample Data</button>
+            <button id="resetWeights" class="small" style="background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted);">Reset Weights</button>
+          </div>
+
+          <div style="margin-top:10px">
+            <label class="small">Datasets (toggle to show/compare)</label>
+            <div id="datasetChips" class="dataset-toggle" style="margin-top:6px"></div>
+          </div>
+
+          <div style="margin-top:10px">
+            <label class="small">Metric Weights (affects overall score)</label>
+            <div class="metrics" id="metricsList"></div>
+          </div>
+
+          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+            <button id="calcScore" class="btn small">Recalc Score</button>
+            <button id="downloadCSV" class="small" style="background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted);">Download Sample CSV</button>
+          </div>
+
+          <div class="footer">Tip: upload your own CSV with the 20 metric names as the first column and each dataset as a following column. The dashboard will map the first dataset to GT 740 by default.</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+<script>
+// --- Sample metric labels (20 metrics) ---
+const METRICS = [
+  'Core Clock (MHz)','Memory Clock (MHz)','VRAM (GB)','Memory Type','TDP (W)','Transistor Count (M)',
+  'FP32 GFLOPS','Texture Units','ROP Units','Bus Width (bit)','Bandwidth (GB/s)','Die Size (mm2)','Process (nm)',
+  'Launch Year','Price (USD)','Power Efficiency (GFLOPS/W)','Average FPS (1080p)','Temps (°C)','Driver Maturity','Feature Support'
+];
+
+// --- Utility: safe number parser ---
+const toNum = v=>{const n=parseFloat(String(v).replace(/[^0-9.\-]+/g,''));return Number.isFinite(n)?n:NaN}
+
+// --- Default sample datasets (three GPUs incl. GT 740) ---
+let sampleData = {
+  'Zebronics GT 740': [924,1250,2,'GDDR5',49,250,300,48,8,128,64,123,28,2014,79,6.0,55,72,7,1],
+  'Competitor A':      [980,1502,4,'GDDR5',60,520,420,64,16,128,96,160,28,2015,119,7.0,68,65,9,1],
+  'Competitor B':      [1100,1750,6,'GDDR5',75,900,650,88,24,192,150,200,20,2017,249,8.6,82,78,12,1]
+};
+
+// Convert non-numeric metrics (like memory type, feature support) into numeric proxies if needed
+function metricToNumeric(arr){
+  return arr.map(v=>{
+    if(typeof v==='number') return v;
+    const s=String(v).toLowerCase();
+    if(s.includes('gddr6')) return 10;
+    if(s.includes('gddr5')) return 7;
+    if(s.includes('ddr3')) return 3;
+    if(s.match(/^[0-9]+$/)) return parseFloat(s);
+    return 5; // fallback
+  });
+}
+
+// --- State ---
+let datasets = {}; // {name: [20 numbers]}
+let weights = new Array(METRICS.length).fill(1);
+let normalized = true;
+
+// Initialize with sample data
+function loadSample(){
+  datasets = {};
+  for(const k in sampleData) datasets[k]=metricToNumeric(sampleData[k]);
+  initUI();
+}
+
+// Build metric weight controls and dataset chips
+function initUI(){
+  const metricsList = document.getElementById('metricsList');
+  metricsList.innerHTML='';
+  METRICS.forEach((m,i)=>{
+    const row = document.createElement('div');row.className='metric-row';
+    const label = document.createElement('span');label.textContent=m;
+    const range = document.createElement('input');range.type='range';range.min=0;range.max=3;range.step=0.1;range.value=weights[i];range.dataset.index=i;
+    range.addEventListener('input',()=>{weights[i]=parseFloat(range.value);recalcAndRender();});
+    row.appendChild(label);row.appendChild(range);metricsList.appendChild(row);
+  });
+
+  const chips = document.getElementById('datasetChips');chips.innerHTML='';
+  Object.keys(datasets).forEach((name,idx)=>{
+    const c=document.createElement('div');c.className='chip'+(idx===0? ' active':'');c.textContent=name;c.dataset.name=name;
+    c.onclick=()=>{c.classList.toggle('active');updateChartVisibility();};
+    chips.appendChild(c);
+  });
+  recalcAndRender();
+}
+
+// Normalize datasets to [0,1] by metric
+function normalizeDatasets(raw){
+  const result={};
+  const valuesByMetric = METRICS.map((_,i)=>Object.values(raw).map(arr=>arr[i]));
+  const mins = valuesByMetric.map(a=>Math.min(...a.filter(v=>!isNaN(v))));
+  const maxs = valuesByMetric.map((a,i)=>Math.max(...a.filter(v=>!isNaN(v))));
+  for(const name in raw){
+    result[name]=raw[name].map((v,i)=>{
+      if(isNaN(v)) return 0;
+      const min=mins[i], max=maxs[i];
+      if(max===min) return 0.5;
+      return (v-min)/(max-min);
+    });
+  }
+  return result;
+}
+
+// Compute overall weighted score (0..100)
+function computeScore(values){
+  let s=0; let wsum=0;
+  for(let i=0;i<values.length;i++){ s += (isNaN(values[i])?0:values[i]) * weights[i]; wsum += weights[i]; }
+  return wsum? Math.round((s/wsum)*100):0;
+}
+
+// --- Charts ---
+let radarChart, polarChart, barChart;
+function createCharts(){
+  const radarCtx = document.getElementById('radarChart').getContext('2d');
+  const polarCtx = document.getElementById('polarChart').getContext('2d');
+  const barCtx = document.getElementById('barChart').getContext('2d');
+
+  Chart.defaults.font.family='Inter, Arial';
+
+  radarChart = new Chart(radarCtx,{type:'radar',data:{labels:METRICS,datasets:[]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},elements:{line:{tension:0.3}}}});
+
+  polarChart = new Chart(polarCtx,{type:'polarArea',data:{labels:METRICS.slice(0,8),datasets:[]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});
+
+  barChart = new Chart(barCtx,{type:'bar',data:{labels:METRICS,datasets:[]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{display:false}},y:{beginAtZero:true}}}});
+}
+
+function updateChartVisibility(){
+  const active = Array.from(document.querySelectorAll('.chip.active')).map(c=>c.dataset.name);
+  // update chart datasets
+  const colors=['rgba(125,211,252,0.9)','rgba(99,102,241,0.9)','rgba(34,197,94,0.9)','rgba(250,204,21,0.9)'];
+  radarChart.data.datasets = active.map((name,idx)=>({label:name,data:datasets[name],fill:true,backgroundColor:colors[idx%colors.length].replace('0.9','0.12'),borderColor:colors[idx%colors.length],pointRadius:3}));
+  polarChart.data.datasets = active.map((name,idx)=>({label:name,data:datasets[name].slice(0,8),backgroundColor:colors[idx%colors.length].replace('0.9','0.6')}));
+  barChart.data.datasets = active.map((name,idx)=>({label:name,data:datasets[name],backgroundColor:colors[idx%colors.length].replace('0.9','0.6')}));
+  radarChart.update();polarChart.update();barChart.update();
+  // update mini card with first active dataset score
+  const first = active[0]||Object.keys(datasets)[0];
+  document.getElementById('miniTitle').textContent = first || '—';
+  document.getElementById('overallScore').textContent = first? computeScore(datasets[first]) : '—';
+}
+
+function recalcAndRender(){
+  // apply normalization if toggled
+  const raw = JSON.parse(JSON.stringify(datasets));
+  const effective = normalized? normalizeDatasets(raw) : raw;
+  datasets = Object.fromEntries(Object.entries(raw).map(([k,v],i)=>[k,(normalized? effective[k]: v)]));
+  updateChartVisibility();
+}
+
+// File CSV loader (simple parser)
+function parseCSV(text){
+  const lines = text.trim().split(/\r?\n/).map(l=>l.trim()).filter(l=>l);
+  if(lines.length<2) return null;
+  const headers = lines[0].split(',').map(s=>s.trim());
+  // expect first column header to be 'Metric' or similar
+  const rows = lines.slice(1).map(l=>l.split(',').map(s=>s.trim()));
+  const labels = rows.map(r=>r[0]);
+  const data = {};
+  for(let c=1;c<headers.length;c++){
+    const colName=headers[c]||('Dataset '+c);
+    data[colName]=rows.map(r=>toNum(r[c]??'NaN'));
+  }
+  // if provided metrics don't match expected METRICS, try to align by order or fallback
+  if(labels.length===METRICS.length){
+    return data;
+  } else {
+    // try to map by trimming or use first 20
+    const d2={}; let i=0;
+    for(const k in data){ d2[k]=data[k].slice(0,METRICS.length); i++; }
+    return d2;
+  }
+}
+
+// Export combined image using html2canvas
+async function exportCombined(){
+  const el = document.querySelector('.wrap');
+  const canvas = await html2canvas(el, {backgroundColor:null,scale:2});
+  const url = canvas.toDataURL('image/png');
+  const a = document.createElement('a'); a.href=url; a.download='GT740-comparison.png'; a.click();
+}
+
+// CSV sample generator download
+function downloadSampleCSV(){
+  const headers = ['Metric','Zebronics GT 740','Competitor A','Competitor B'];
+  const rows = METRICS.map((m,i)=> [m, sampleData['Zebronics GT 740'][i], sampleData['Competitor A'][i], sampleData['Competitor B'][i]]);
+  const csv = [headers.join(',')].concat(rows.map(r=>r.join(','))).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'}); const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='GT740-sample.csv';a.click();URL.revokeObjectURL(url);
+}
+
+// --- Event wiring ---
+window.addEventListener('load',()=>{
+  createCharts(); loadSample();
+  document.getElementById('normToggle').addEventListener('change',(e)=>{normalized=e.target.checked;recalcAndRender();});
+  document.getElementById('loadSample').addEventListener('click',()=>{loadSample();});
+  document.getElementById('resetWeights').addEventListener('click',()=>{weights=new Array(METRICS.length).fill(1);initUI();});
+  document.getElementById('exportBtn').addEventListener('click',()=>exportCombined());
+  document.getElementById('downloadCSV').addEventListener('click',()=>downloadSampleCSV());
+
+  document.getElementById('csvInput').addEventListener('change',async (ev)=>{
+    const f=ev.target.files[0]; if(!f) return; const txt=await f.text(); const parsed = parseCSV(txt);
+    if(!parsed){ alert('CSV parsing failed — please follow the sample CSV format.'); return; }
+    datasets = {};
+    for(const k in parsed) datasets[k]=parsed[k].map(v=>isNaN(v)?0:v);
+    initUI();
+  });
+
+  document.getElementById('calcScore').addEventListener('click',()=>{recalcAndRender(); alert('Scores recalculated');});
+});
+</script>
+</body>
+</html>

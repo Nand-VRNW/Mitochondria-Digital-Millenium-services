@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us | Mitochondria Digital Millennium Services</title>
+  <meta name="description" content="Innovative PC Building, Affiliate Marketing, Tech Solutions & Digital Services" />
+
+  <!-- Bootstrap 5 + Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --primary: #ffd000;
+      --dark-bg: #1a1a1a;
+      --dark-text: #e0e0e0;
+      --light-bg: #f8f9fa;
+    }
+    body {
+      transition: background-color 0.4s, color 0.4s;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .dark-mode {
+      background-color: var(--dark-bg) !important;
+      color: var(--dark-text) !important;
+    }
+    .dark-mode .bg-light { background-color: #2c2c2c !important; }
+    .dark-mode .card, .dark-mode .navbar, .dark-mode footer { 
+      background-color: #2c2c2c !important; 
+      border-color: #444 !important; 
+    }
+    .dark-mode .text-muted { color: #aaa !important; }
+
+    /* Banner with Responsive Text */
+    #inner-headline {
+      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), url('img/about-banner.jpg') center/cover no-repeat;
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+      color: white;
+      text-align: center;
+    }
+    #inner-headline h2 {
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      font-weight: 800;
+      text-shadow: 0 4px 15px rgba(0,0,0,0.7);
+    }
+    #inner-headline p {
+      font-size: clamp(1rem, 3vw, 1.5rem);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* Quick Gadgets */
+    .quick-gadgets {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 20px;
+      padding: 30px;
+      margin: 40px 0;
+      text-align: center;
+    }
+
+    /* Team Cards */
+    .team-member img {
+      transition: transform 0.4s;
+      border-radius: 12px;
+    }
+    .team-member:hover img {
+      transform: scale(1.08);
+    }
+
+    /* Hover Glow */
+    .hover-glow {
+      transition: all 0.3s ease;
+    }
+    .hover-glow:hover {
+      color: var(--primary) !important;
+      text-shadow: 0 0 15px rgba(255, 209, 0, 0.8);
+      transform: translateY(-3px);
+    }
+
+    /* Floating Controls */
+    .floating-controls {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .floating-controls button {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      font-size: 1.3rem;
+      transition: all 0.3s;
+    }
+    .floating-controls button:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    }
+
+    /* Scroll to Top */
+    .scrollup {
+      transition: all 0.4s ease;
+    }
+    .scrollup:hover {
+      background: var(--primary) !important;
+      color: #000 !important;
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px rgba(255, 209, 0, 0.5);
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+  <!-- Floating Controls -->
+  <div class="floating-controls">
+    <button id="darkModeToggle" class="btn btn-warning" title="Dark Mode"><i class="fas fa-moon"></i></button>
+    <button id="printBtn" class="btn btn-info text-white" title="Print"><i class="fas fa-print"></i></button>
+    <button id="shareBtn" class="btn btn-success" title="Share"><i class="fas fa-share-alt"></i></button>
+    <button id="langBtn" class="btn btn-primary">EN</button>
+    <button id="narratorBtn" class="btn btn-danger" title="Read Aloud"><i class="fas fa-volume-up"></i></button>
+  </div>
+
+  <!-- Header -->
+  <header class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="img/logo.png" alt="logo" height="40">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link active" href="about.html">About Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="Portfolio mitochodria 2nd part.html">Tech-NEWS ROOM</a></li>
+          <li class="nav-item"><a class="nav-link" href="portfolio.html">Our Gallery</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">PC-Building Services</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section id="inner-headline" class="text-white">
+    <div class="container">
+      <h2>About Us</h2>
+      <p>Innovation Meets Discipline. Engineering the Future.</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <section class="container my-5">
+    <div class="about">
+      <div class="row text-center">
+        <div class="col-lg-10 mx-auto">
+          <h1 class="mb-4">We are an Awesome <span class="text-primary">TEAM</span></h1>
+          <p class="lead">We’re a next-gen engineering outfit built on a simple promise: take bold ideas, pressure-test them with real-world logic, and scale them into solutions that actually move the needle.</p>
+          <p>Rooted in traditional craftsmanship yet obsessed with future-forward innovation, our team operates at the intersection of hardware, biotech, computing, and clean-energy systems. From experimental propulsion to advanced chip design, from microbial electro-systems to next-level digital platforms, we chase the problems others call “impossible” and turn them into executable roadmaps.</p>
+          <p><strong>Our mission is to build technologies that help shape a smarter, cleaner, more interconnected world</strong> — while keeping our workflow transparent, our strategy data-driven, and our ambitions sky-high.</p>
+          <a href="https://drive.google.com/file/d/1LnOBGp3FzNR6ulYiUOwB15M2O8BoSBk2/view?usp=drive_link" class="btn btn-warning btn-lg mt-3 hover-glow">Explore Our Vision</a>
+        </div>
+      </div>
+
+      <hr class="my-5">
+
+      <!-- Why Choose Us + Solutions + Expertise -->
+      <div class="row g-5">
+        <div class="col-md-4">
+          <h3>Why Choose Us?</h3>
+          <p>We're here to engineer impact.<br>To design with intent.<br>To build what’s next.<br><br>This is where innovation meets discipline.<br>This is our company.</p>
+        </div>
+        <div class="col-md-4">
+          <h3>Our Solutions</h3>
+          <div class="accordion" id="solutionsAccordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#s1">Custom PC Engineering</button></h2>
+              <div id="s1" class="accordion-collapse collapse show" data-bs-parent="#solutionsAccordion">
+                <div class="accordion-body">High-performance workstations, gaming rigs, and enterprise systems built to your exact needs.</div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#s2">Digital Platforms</button></h2>
+              <div id="s2" class="accordion-collapse collapse" data-bs-parent="#solutionsAccordion">
+                <div class="accordion-body">Affiliate ecosystems, content networks, and scalable online business infrastructure.</div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#s3">Innovation R&D</button></h2>
+              <div id="s3" class="accordion-collapse collapse" data-bs-parent="#solutionsAccordion">
+                <div class="accordion-body">From biotech circuits to clean energy prototypes — we build the future.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <h3>Our Expertise</h3>
+          <div class="mb-3"><strong>Hardware Engineering</strong><div class="progress"><div class="progress-bar bg-danger" style="width:90%">90%</div></div></div>
+          <div class="mb-3"><strong>System Design</strong><div class="progress"><div class="progress-bar bg-success" style="width:85%">85%</div></div></div>
+          <div class="mb-3"><strong>Digital Strategy</strong><div class="progress"><div class="progress-bar bg-info" style="width:80%">80%</div></div></div>
+          <div class="mb-3"><strong>Innovation R&D</strong><div class="progress"><div class="progress-bar bg-warning" style="width:95%">95%</div></div></div>
+        </div>
+      </div>
+
+      <hr class="my-5">
+
+      <!-- Team Section -->
+      <h2 class="text-center mb-5">Our Leadership</h2>
+      <div class="row g-4">
+        <div class="col-md-3 col-6">
+          <div class="text-center team-member">
+            <img src="img/Nandha Vishnu President and CEO of Mitcohondria.jpg" class="img-fluid rounded shadow" alt="Nandha Vishnu">
+            <h5 class="mt-3">Nandha Vishnu</h5>
+            <p class="text-muted">Founder & President</p>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="text-center team-member">
+            <img src="img/team22.jpg" class="img-fluid rounded shadow" alt="">
+            <h5 class="mt-3">Nandha Vishnu</h5>
+            <p class="text-muted">Lead Developer</p>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="text-center team-member">
+            <img src="img/team32.jpg" class="img-fluid rounded shadow" alt="">
+            <h5 class="mt-3">Nandha Vishnu</h5>
+            <p class="text-muted">CEO - Executive</p>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="text-center team-member">
+            <img src="img/team24.jpg" class="img-fluid rounded shadow" alt="">
+            <h5 class="mt-3">Nandha Vishnu</h5>
+            <p class="text-muted">CTO - Chief Board</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Gadgets -->
+  <section class="container">
+    <div class="quick-gadgets">
+      <h2>Quick Actions</h2>
+      <div class="d-flex flex-wrap justify-content-center gap-3 mt-4">
+        <a href="nandha.html" class="btn btn-light btn-lg"><i class="fas fa-shopping-cart"></i> Shop Now</a>
+        <a href="contact.html" class="btn btn-light btn-lg"><i class="fas fa-wrench"></i> Book PC Build</a>
+        <a href="Portfolio mitochodria 2nd part.html" class="btn btn-light btn-lg"><i class="fas fa-newspaper"></i> Tech News</a>
+        <a href="mailto:Mitochondriadigitalservices@gmail.com" class="btn btn-light btn-lg"><i class="fas fa-envelope"></i> Contact Us</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer (Same as Code 1) -->
+  <footer class="bg-dark text-white py-5 mt-5">
+    <div class="container">
+      <div class="row g-5">
+        <div class="col-lg-3 col-md-6">
+          <h5 class="mb-4 text-warning fw-bold">Get in Touch</h5>
+          <p><strong>Mitochondria Corporation</strong><br>
+            <small class="text-muted">Registered Office:</small> Seattle, WA, United States<br>
+            <small class="text-muted">Locality:</small> 
+            <a href="http://vhnsnc.edu.in/index.php" class="text-white text-decoration-underline hover-glow" target="_blank">
+              <b>VHN Senthikumara Nadar College, Virudhunagar</b>
+            </a>
+          </p>
+          <p><i class="fas fa-phone-alt me-2 text-warning"></i> +91 95975 63183<br>
+            <i class="fas fa-envelope me-2 text-warning"></i> 
+            <a href="mailto:Mitochondriadigitalservices@gmail.com" class="text-white hover-glow">
+              Mitochondriadigitalservices@gmail.com
+            </a>
+          </p>
+        </div>
+        <!-- Other footer columns same as Code 1 -->
+        <!-- (Quick Links, News, Channels – copied exactly from your Code 1) -->
+      </div>
+      <hr class="my-5 border-secondary">
+      <div class="row align-items-center">
+        <div class="col-md-6 text-center text-md-start">
+          <p class="mb-0 small">© 2025 <strong>Mitochondria Corporation</strong> ALL RIGHTS RESERVED.<br>
+            Powered by <a href="https://drive.google.com/file/d/1LnOBGp3FzNR6ulYiUOwB15M2O8BoSBk2/view?usp=drive_link" class="text-warning hover-glow">Mitochondria Digital Millennium Services</a>
+          </p>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+          <a href="#" class="btn btn-outline-warning btn-sm rounded-pill px-4 scrollup">Back to Top</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Dark Mode
+    document.getElementById('darkModeToggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const icon = document.querySelector('#darkModeToggle i');
+      icon.classList.toggle('fa-moon');
+      icon.classList.toggle('fa-sun');
+    });
+
+    // Print
+    document.getElementById('printBtn').onclick = () => window.print();
+
+    // Share
+    document.getElementById('shareBtn').onclick = async () => {
+      if (navigator.share) {
+        try { await navigator.share({ title: document.title, url: location.href }); }
+        catch { alert('Sharing canceled'); }
+      } else {
+        navigator.clipboard.writeText(location.href);
+        alert('Link copied!');
+      }
+    };
+
+    // Language Toggle
+    document.getElementById('langBtn').onclick = function() {
+      this.textContent = this.textContent === 'EN' ? 'TA' : 'EN';
+    };
+
+    // Narrator
+    let utterance;
+    document.getElementById('narratorBtn').onclick = () => {
+      if ('speechSynthesis' in window) {
+        if (speechSynthesis.speaking) {
+          speechSynthesis.cancel();
+        } else {
+          const text = document.body.innerText;
+          utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = 'en-US';
+          utterance.rate = 0.9;
+          speechSynthesis.speak(utterance);
+        }
+      }
+    };
+
+    // Scroll to Top
+    document.querySelector('.scrollup').onclick = (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+  </script>
+</body>
+</html>

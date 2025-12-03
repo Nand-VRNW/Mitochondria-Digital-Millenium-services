@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Gallery | Mitochondria Digital Millennium Services</title>
+  <meta name="description" content="Explore our premium PC builds, custom rigs, software projects & tech creations by Mitochondria Corporation" />
+
+  <!-- Bootstrap 5 + Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <!-- Lightbox (Ekko Lightbox) + Isotope + AOS Animation -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css" rel="stylesheet" />
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --primary: #ffd000;
+      --dark-bg: #1a1a1a;
+      --dark-text: #e0e0e0;
+      --light-bg: #f8f9fa;
+    }
+    body {
+      transition: background-color 0.4s, color 0.4s;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--light-bg);
+      overflow-x: hidden;
+    }
+    .dark-mode {
+      background-color: var(--dark-bg) !important;
+      color: var(--dark-text) !important;
+    }
+    .dark-mode .bg-light, .dark-mode .card, .dark-mode .navbar, .dark-mode .gallery-filter button {
+      background-color: #2c2c2c !important;
+      border-color: #444 !important;
+      color: #e0e0e0 !important;
+    }
+    .dark-mode .text-muted { color: #aaa !important; }
+    .dark-mode .form-control, .dark-mode input { background-color: #333; color: #fff; border-color: #555; }
+
+    /* Header Banner */
+    .page-header {
+      background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url('img/slides/gallery-banner.jpg') center/cover no-repeat;
+      color: white;
+      padding: 120px 20px;
+      text-align: center;
+      border-radius: 0 0 25px 25px;
+    }
+    .page-header h1 {
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      font-weight: 900;
+      text-shadow: 0 5px 15px rgba(0,0,0,0.6);
+    }
+
+    /* Gallery Filters */
+    .gallery-filter button {
+      background: #333;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      border-radius: 50px;
+      transition: all 0.3s;
+    }
+    .gallery-filter button.active, .gallery-filter button:hover {
+      background: var(--primary);
+      color: #000;
+      transform: translateY(-3px);
+    }
+
+    /* Gallery Item */
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+      transition: all 0.4s;
+    }
+    .gallery-item img {
+      transition: transform 0.6s ease;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .gallery-item:hover img {
+      transform: scale(1.15);
+    }
+    .gallery-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.8));
+      color: white;
+      padding: 20px;
+      transform: translateY(100%);
+      transition: transform 0.4s ease;
+    }
+    .gallery-item:hover .gallery-overlay {
+      transform: translateY(0);
+    }
+
+    /* Quick Gadgets */
+    .quick-gadgets {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 20px;
+      padding: 40px 25px;
+      margin: 50px 0;
+      text-align: center;
+    }
+
+    /* Floating Controls */
+    .floating-controls {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .floating-controls button {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      border: none;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+      font-size: 1.4rem;
+      transition: all 0.3s;
+    }
+    .floating-controls button:hover {
+      transform: translateY(-5px) scale(1.1);
+    }
+
+    /* Footer Glow */
+    .hover-glow {
+      transition: all 0.3s ease;
+    }
+    .hover-glow:hover {
+      color: var(--primary) !important;
+      text-shadow: 0 0 15px rgba(255, 209, 0, 0.8);
+      transform: translateY(-3px);
+    }
+    .scrollup:hover {
+      background: var(--primary) !important;
+      color: #000 !important;
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(255, 209, 0, 0.5);
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+  <!-- Floating Controls -->
+  <div class="floating-controls">
+    <button id="darkModeToggle" class="btn btn-warning" title="Dark Mode"><i class="fas fa-moon"></i></button>
+    <button id="printBtn" class="btn btn-info text-white" title="Print"><i class="fas fa-print"></i></button>
+    <button id="shareBtn" class="btn btn-success" title="Share"><i class="fas fa-share-alt"></i></button>
+    <button id="langBtn" class="btn btn-primary" title="Language">EN</button>
+    <button id="narratorBtn" class="btn btn-danger" title="Read Aloud"><i class="fas fa-volume-up"></i></button>
+  </div>
+
+  <!-- Navbar -->
+  <header class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="img/logo.png" alt="Mitochondria Logo" height="45">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="Portfolio mitochodria 2nd part.html">Tech-NEWS ROOM</a></li>
+          <li class="nav-item"><a class="nav-link active" href="portfolio.html">Our Gallery</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">PC-Building Services</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1>Our Gallery</h1>
+      <p class="lead mt-3 fs-3">Premium PC Builds • Custom Rigs • Digital Creations</p>
+    </div>
+  </section>
+
+  <!-- Gallery Filters -->
+  <section class="container my-5">
+    <div class="text-center gallery-filter mb-5" data-aos="fade-up">
+      <button class="active" data-filter="*">All</button>
+      <button data-filter=".gaming">Gaming PCs</button>
+      <button data-filter=".workstation">Workstations</button>
+      <button data-filter=".budget">Budget Builds</button>
+      <button data-filter=".rgb">RGB Masterpiece</button>
+      <button data-filter=".mini">Mini PCs</button>
+      <button data-filter=".software">Software Projects</button>
+    </div>
+
+    <!-- Isotope Gallery Grid -->
+    <div class="row g-4 grid">
+      <!-- Repeat this block with your actual images -->
+      <div class="col-lg-4 col-md-6 col-sm-12 grid-item gaming rgb" data-aos="fade-up">
+        <div class="gallery-item">
+          <a href="img/gallery/1.jpg" data-toggle="lightbox" data-gallery="gallery" data-title="RTX 4090 Beast Mode" data-footer="Built for 8K Gaming">
+            <img src="img/gallery/1.jpg" alt="Gaming PC" class="img-fluid" loading="lazy">
+            <div class="gallery-overlay">
+              <h5>RTX 4090 Beast Mode</h5>
+              <p>8K Gaming • Liquid Cooled • RGB</p>
+            </div>
+          </a>
+        </div>
+      </div>
+      <!-- Add 20–30 more items like this with categories -->
+      <!-- Example 2 -->
+      <div class="col-lg-4 col-md-6 col-sm-12 grid-item workstation" data-aos="fade-up" data-aos-delay="100">
+        <div class="gallery-item">
+          <a href="img/gallery/2.jpg" data-toggle="lightbox" data-gallery="gallery" data-title="Threadripper PRO Workstation">
+            <img src="img/gallery/2.jpg" alt="Workstation" loading="lazy">
+            <div class="gallery-overlay">
+              <h5>Threadripper PRO</h5>
+              <p>128 Cores • 512GB RAM • 8TB NVMe</p>
+            </div>
+          </a>
+        </div>
+      </div>
+      <!-- Continue adding your real images... -->
+    </div>
+  </section>
+
+  <!-- Quick Gadgets -->
+  <section class="container">
+    <div class="quick-gadgets">
+      <h2 class="mb-4">Explore More</h2>
+      <div class="d-flex flex-wrap justify-content-center gap-3">
+        <button class="btn btn-light btn-lg" onclick="location.href='nandha.html'"><i class="fas fa-shopping-cart"></i> Shop Builds</button>
+        <button class="btn btn-light btn-lg" onclick="location.href='contact.html'"><i class="fas fa-wrench"></i> Custom Build</button>
+        <button class="btn btn-light btn-lg" onclick="location.href='Portfolio mitochodria 2nd part.html'"><i class="fas fa-newspaper"></i> Tech News</button>
+        <button class="btn btn-light btn-lg" onclick="location.href='contact.html'"><i class="fas fa-envelope"></i> Get Quote</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Glowing Footer (Same as Contact Page) -->
+  <footer class="bg-dark text-white py-5 mt-5">
+    <div class="container">
+      <div class="row g-5">
+        <div class="col-lg-3 col-md-6">
+          <h5 class="mb-4 text-warning fw-bold">Get in Touch</h5>
+          <p class="mb-3">
+            <strong>Mitochondria Corporation</strong><br>
+            <small class="text-muted">Registered Office:</small> Seattle, WA, United States<br>
+            <small class="text-muted">Locality:</small> 
+            <a href="http://vhnsnc.edu.in/index.php" class="text-white text-decoration-underline hover-glow" target="_blank">
+              <b>V.H.N.S.N College, Virudhunagar</b>
+            </a>
+          </p>
+          <p class="mb-0">
+            <i class="fas fa-phone-alt me-2 text-warning"></i> +91 95975 63183<br>
+            <i class="fas fa-envelope me-2 text-warning"></i> 
+            <a href="mailto:Mitochondriadigitalservices@gmail.com" class="text-white hover-glow">
+              Mitochondriadigitalservices@gmail.com
+            </a>
+          </p>
+        </div>
+        <!-- Other footer columns same as your contact page -->
+        <div class="col-lg-3 col-md-6">
+          <h5 class="mb-4 text-warning fw-bold">Quick Links</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="https://drive.google.com/file/d/11VTXW3D7GXa2IR34xovytb__pcg8SPvp/view?usp=drive_link" class="text-white hover-glow"><i class="fas fa-angle-right me-2"></i>Terms & Conditions</a></li>
+            <li class="mb-2"><a href="https://drive.google.com/file/d/11VTXW3D7GXa2IR34xovytb__pcg8SPvp/view?usp=drive_link" class="text-white hover-glow"><i class="fas fa-angle-right me-2"></i>Disclaimer</a></li>
+            <li class="mb-2"><a href="https://docs.google.com/forms/d/e/1FAIpQLScPHe5qM2wbVKaUEHQ8U-kWh3mfHVMLL3B6BBTIasX5ltqusQ/viewform?usp=header" class="text-white hover-glow"><i class="fas fa-angle-right me-2"></i>Feedback</a></li>
+          </ul>
+        </div>
+        <!-- News & Channels columns same as before -->
+      </div>
+
+      <hr class="my-5 border-secondary">
+      <div class="row align-items-center">
+        <div class="col-md-6 text-center text-md-start">
+          <p class="mb-0 small">
+            © 2025 <strong>Mitochondria Corporation</strong> ALL RIGHTS RESERVED.<br>
+            Powered by <a href="https://drive.google.com/file/d/1LnOBGp3FzNR6ulYiUOwB15M2O8BoSBk2/view?usp=drive_link" target="_blank" class="text-warning hover-glow text-decoration-underline">Mitochondria Digital Millennium Services</a>
+          </p>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+          <a href="#" class="btn btn-outline-warning btn-sm rounded-pill px-4 scrollup">Back to Top</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js"></script>
+  <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+  <script>
+    AOS.init({ duration: 800 });
+
+    // Isotope Gallery
+    const grid = document.querySelector('.grid');
+    const iso = new Isotope(grid, {
+      itemSelector: '.grid-item',
+      layoutMode: 'fitRows'
+    });
+
+    document.querySelectorAll('.gallery-filter button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelector('.gallery-filter .active').classList.remove('active');
+        btn.classList.add('active');
+        iso.arrange({ filter: btn.getAttribute('data-filter') });
+      });
+    });
+
+    // Lightbox
+    $(document).on('click', '[data-toggle="lightbox"]', function(e) {
+      e.preventDefault();
+      $(this).ekkoLightbox({ alwaysShowClose: true });
+    });
+
+    // Dark Mode Toggle
+    document.getElementById('darkModeToggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const icon = document.querySelector('#darkModeToggle i');
+      icon.classList.toggle('fa-moon');
+      icon.classList.toggle('fa-sun');
+    });
+
+    // Other Floating Controls
+    document.getElementById('printBtn').onclick = () => window.print();
+    document.getElementById('shareBtn').onclick = async () => {
+      if (navigator.share) {
+        try { await navigator.share({ title: document.title, url: location.href }); }
+        catch { alert('Sharing canceled'); }
+      } else {
+        navigator.clipboard.writeText(location.href);
+        alert('Link copied to clipboard!');
+      }
+    };
+    document.getElementById('langBtn').onclick = function() {
+      this.textContent = this.textContent === 'EN' ? 'TA' : 'EN';
+    };
+
+    let utterance;
+    document.getElementById('narratorBtn').onclick = () => {
+      if ('speechSynthesis' in window) {
+        if (speechSynthesis.speaking) speechSynthesis.cancel();
+        else {
+          utterance = new SpeechSynthesisUtterance(document.body.innerText);
+          utterance.lang = 'en-US';
+          utterance.rate = 0.9;
+          speechSynthesis.speak(utterance);
+        }
+      }
+    };
+
+    // Back to Top
+    document.querySelector('.scrollup').addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

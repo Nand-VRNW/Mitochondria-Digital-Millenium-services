@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PAPatterns Radio Player</title>
+  <style>
+    :root {
+      --primary: #9c27b0;   /* Your purple theme */
+      --bg: #121212;
+      --text: #ffffff;
+      --accent: #e91e63;
+    }
+    body { margin:0; font-family: 'Segoe UI', sans-serif; background:#000; }
+    
+    .radio-player {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 340px;
+      background: rgba(18,18,18,0.95);
+      backdrop-filter: blur(20px);
+      color: var(--text);
+      border-radius: 18px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      overflow: hidden;
+      z-index: 9999;
+      transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+    .radio-player:hover { transform: translateY(-5px); box-shadow: 0 30px 60px rgba(156,39,176,0.4); }
+    
+    .artwork {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      background: linear-gradient(135deg, #9c27b0, #e91e63);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+    }
+    .info {
+      padding: 16px;
+      text-align: center;
+    }
+    .title { font-weight: 700; font-size: 18px; margin: 0 0 6px; }
+    .artist { opacity: 0.8; font-size: 14px; margin: 0; }
+    
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: rgba(0,0,0,0.3);
+    }
+    button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 28px;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+    button:hover { background: rgba(255,255,255,0.1); }
+    .playpause { font-size: 42px !important; color: var(--primary); }
+    
+    .volume {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100px;
+      height: 5px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 5px;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      background: var(--primary);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    
+    .stations {
+      padding: 10px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      background: rgba(0,0,0,0.4);
+    }
+    .radio-player.open .stations { max-height: 300px; }
+    .station-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background: none;
+      border: none;
+      color: white;
+      text-align: left;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 8px;
+      margin: 4px 0;
+    }
+    .station-btn:hover, .station-btn.active {
+      background: var(--primary);
+    }
+    .toggle-stations {
+      text-align: center;
+      padding: 8px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ? THE ULTIMATE RADIO PLAYER ? -->
+  <div class="radio-player" id="player">
+    <img src="https://i.imgur.com/8QZqY6k.png" class="artwork" id="artwork" alt="Now Playing"/>
+    <div class="info">
+      <h3 class="title" id="title">Click Play to Start</h3>
+      <p class="artist" id="artist">PAPatterns Radio ?</p>
+    </div>
+
+    <div class="controls">
+      <button onclick="toggleStations()">?</button>
+      
+      <button class="playpause" id="playBtn" onclick="togglePlay()">?</button>
+      
+      <div class="volume">
+        <span onclick="toggleMute()">??</span>
+        <input type="range" min="0" max="100" value="80" id="volume"/>
+      </div>
+    </div>
+
+    <div class="stations" id="stationsList">
+      <div class="toggle-stations" onclick="toggleStations()">? Hide Stations ?</div>
+      
+      <button class="station-btn active" data-src="https://live.lofi.cafe/stream" data-name="Lofi Girl Style">?? Lofi Girl 24/7</button>
+      <button class="station-btn" data-src="http://stream.zeno.fm/0r0xa8m3r88uv" data-name="Chillhop Music">?? Chillhop Official</button>
+      <button class="station-btn" data-src="https://streams.calmradio.com/api/123/128/stream" data-name="Calm Radio">?? Calm & Relax</button>
+      <button class="station-btn" data-src="https://streaming.radio.co/s8f5e8b8e5/listen" data-name="80s Planet">?? Retro 80s</button>
+      <button class="station-btn" data-src="https://radio.garden/api/ara/audio/0c1e6e6f-0e6f-4e6f-8e6f-0e6f6e6f6e6f/channel.mp3" data-name="Bollywood Hits">?? Bollywood 2025</button>
+    </div>
+  </div>
+
+  <audio id="audio" preload="none"></audio>
+
+  <script>
+    const audio = document.getElementById('audio');
+    const playBtn = document.getElementById('playBtn');
+    const titleEl = document.getElementById('title');
+    const artistEl = document.getElementById('artist');
+    const artwork = document.getElementById('artwork');
+    const volumeSlider = document.getElementById('volume');
+    const player = document.getElementById('player');
+    const stationsList = document.getElementById('stationsList');
+
+    // Default station
+    let currentStation = "https://live.lofi.cafe/stream";
+
+    function loadStation(src, name = "Unknown Station") {
+      audio.src = src;
+      audio.load();
+      audio.play();
+      playBtn.innerHTML = "??";
+      titleEl.textContent = "Loading...";
+      artistEl.textContent = name;
+      currentStation = src;
+      
+      // Update active button
+      document.querySelectorAll('.station-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    function togglePlay() {
+      if (audio.paused) {
+      audio.play();
+      playBtn.innerHTML = "??";
+      } else {
+      audio.pause();
+      playBtn.innerHTML = "?";
+      }
+    }
+
+    function toggleMute() {
+      audio.muted = !audio.muted;
+      event.target.textContent = audio.muted ? "??" : "??";
+    }
+
+    function toggleStations() {
+      player.classList.toggle('open');
+    }
+
+    volumeSlider.addEventListener('input', () => {
+      audio.volume = volumeSlider.value / 100;
+    });
+
+    // Auto update song title & artwork (for Icecast/Shoutcast stations)
+    function updateMetadata() {
+      fetch("https://api.allorigins.win/raw?url=" + encodeURIComponent(currentStation.replace("/stream","/status-json.xsl")))
+        .then(r => r.json())
+        .then(data => {
+          if (data?.icestats?.source?.title) {
+            const [artist, title] = data.icestats.source.title.split(" - ");
+            titleEl.textContent = title || "Unknown";
+            artistEl.textContent = artist || "Live Radio";
+          }
+        })
+        .catch(() => {});
+    }
+    setInterval(updateMetadata, 10000);
+
+    // Station buttons
+    document.querySelectorAll('.station-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const src = e.target.dataset.src;
+        const name = e.target.dataset.name;
+        loadStation(src, name);
+      });
+    });
+
+    // Start with first station
+    loadStation(currentStation, "Lofi Girl 24/7");
+  </script>
+
+</body>
+</html>
