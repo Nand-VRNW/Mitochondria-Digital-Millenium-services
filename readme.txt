@@ -1,7 +1,7 @@
 <!--
 =================================================================
   MITOCHONDRIA DIGITAL MILLENNIUM SERVICES - OFFICIAL website 
-  Version: 2026 Premium Edition
+  Version: 2025 Premium Edition
   Designed & Developed by: Mitochondria Digital Millennium Services | MITOCHONDRIA CORPORATION
   Website: https://https://nand-vrnw.github.io/Mitochondria-Digital-Millenium-Service/.com
   Contact: Mitochondriadigitalservices@gmail.com

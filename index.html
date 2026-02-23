@@ -87,6 +87,41 @@
       transform: translateY(-6px);
       box-shadow: 0 12px 25px rgba(255, 209, 0, 0.5);
     }
+
+    /* ───────────────────────────────────────────────
+       Scroll Animation Additions (Modern & Smooth)
+    ──────────────────────────────────────────────── */
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(60px) scale(0.96);
+      transition: opacity 0.1s ease; /* prevent flash */
+    }
+
+    .card.animate-on-scroll,
+    .section-animate {
+      opacity: 0;
+      transform: translateX(-60px) scale(0.97);
+      will-change: transform, opacity;
+    }
+
+    .card.animate-on-scroll:nth-child(even) {
+      transform: translateX(60px) scale(0.97);
+    }
+
+    .about-section.animate-on-scroll {
+      opacity: 0;
+      transform: translateY(80px);
+    }
+
+    .quick-gadgets.animate-on-scroll {
+      opacity: 0;
+      transform: scale(0.92);
+    }
+
+    .testimonial-section {
+      opacity: 0;
+      transform: translateY(50px);
+    }
   </style>
 </head>
 <body class="bg-light">
@@ -115,20 +150,20 @@
           <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
           <li class="nav-item"><a class="nav-link" href="Portfolio mitochodria 2nd part.html">Tech-NEWS ROOM</a></li>
           <li class="nav-item"><a class="nav-link" href="portfolio.html">Our Gallery</a></li>
-          <li class="nav-item"><a class="nav-link" href="contact.html">PC-Building Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Join our Community</a></li>
         </ul>
       </div>
     </div>
   </header>
 
-  <!-- Main Slider -->
+  <!-- Main Slider (no animation needed - it's already visible) -->
   <div id="main-slider" class="carousel slide carousel-fade" data-bs-ride="carousel">
     <div class="carousel-inner">
       <div class="carousel-item active">
         <img src="img/slides/1.jpg" class="d-block w-100" alt="PC Builds">
         <div class="carousel-caption">
           <h3>Mitochondria Digital Millennium Services</h3>
-          <p>Tailored PC builds for creators, gamers, and businesses.</p>
+          <p>Tailored Innovation builds for creators, Developers, and businesses.</p>
         </div>
       </div>
       <div class="carousel-item">
@@ -138,7 +173,6 @@
           <p>Transparent partnerships with global vendors.</p>
         </div>
       </div>
-      
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#main-slider" data-bs-slide="prev">
       <span class="carousel-control-prev-icon"></span>
@@ -148,21 +182,21 @@
     </button>
   </div>
 
-  <!-- Services Section -->
+  <!-- Services Section – animate cards -->
   <section class="container my-5">
     <div class="row text-center g-4">
       <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
+        <div class="card h-100 shadow-sm animate-on-scroll">
           <img src="img/slides/2.jpg" class="card-img-top" alt="Shopping">
           <div class="card-body">
             <h3>Way to Shopping</h3>
-            <p>Get your dream products from trusted online stores!</p>
+            <p>Discover top products from trusted online stores, with clear and essential details to help you buy smarter.!</p>
             <a href="nandha.html" class="btn btn-outline-primary">EXPLORE & BUY</a>
           </div>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
+        <div class="card h-100 shadow-sm animate-on-scroll">
           <img src="img/slides/22.jpg" class="card-img-top" alt="Workshop">
           <div class="card-body">
             <h3>Way to PC Workshop</h3>
@@ -172,12 +206,12 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
+        <div class="card h-100 shadow-sm animate-on-scroll">
           <img src="img/service3.jpg" class="card-img-top" alt="News">
           <div class="card-body">
-            <h3>Way to Websites Showroom</h3>
-            <p>Get a Modern custommizable ,light-weight websites for Premium Offer .</p>
-            <a href="Mitochondria information & services.html" class="btn btn-outline-primary">READ HEADLINES</a>
+            <h3>Meet our Aviation Service</h3>
+            <p>Get real-time, reliable flight reservations and seamless booking with ease ! .</p>
+            <a href="Mitochondria information & services.html" class="btn btn-outline-primary">Get your Flight seat</a>
           </div>
         </div>
       </div>
@@ -186,7 +220,7 @@
 
   <!-- Quick Actions -->
   <section class="container">
-    <div class="quick-gadgets text-center">
+    <div class="quick-gadgets text-center animate-on-scroll">
       <h2 class="mb-4">Quick Actions</h2>
       <div class="d-flex flex-wrap justify-content-center gap-3">
         <button class="btn btn-light btn-lg" onclick="alert('Opening Affiliate Store...')"><i class="fas fa-shopping-cart"></i> Shop Now</button>
@@ -198,21 +232,22 @@
   </section>
 
   <!-- About Section -->
-  <section class="container my-5">
+  <section class="container my-5 about-section animate-on-scroll">
     <div class="row align-items-center">
       <div class="col-md-4 text-center">
         <img src="img/people.png" class="img-fluid rounded" alt="Team">
       </div>
       <div class="col-md-8">
         <h1>Mitochondria <span class="text-primary">Digital Millennium Services</span></h1>
-        <p>Founded in 2023, Mitochondria Corporation (MITCH, VRNW) is a rising digital enterprise born from a young innovator’s vision — to merge hardware engineering, affiliate technology, and global online services into a single, living ecosystem.</p>
-        <p>We’re not just a company; we’re a growing network of thinkers and builders creating a more connected, efficient, and transparent tech economy.</p>
+        <p>Founded in 2023, Mitochondria is a rising digital enterprise born from a young innovator’s vision — to merge hardware engineering, affiliate technology, and global online services into a single, living ecosystem.</p>
+        <p>We’re not just a company; we’re a growing network of thinkers and builders creating a more connected, efficient, and transparent tech economy </p><br>
+        <p>- NANDHA VISHNU Founder of Mitochondria Digital Millennium Services </p>
       </div>
     </div>
   </section>
 
   <!-- Testimonials -->
-  <section class="bg-dark text-white py-5">
+  <section class="bg-dark text-white py-5 testimonial-section">
     <div class="container">
       <div id="testimonialCarousel" class="carousel slide">
         <div class="carousel-inner text-center">
@@ -252,11 +287,11 @@
         <div class="col-lg-3 col-md-6">
           <h5 class="mb-4 text-warning fw-bold">Get in Touch</h5>
           <p class="mb-3">
-            <strong>Mitochondria Corporation</strong><br>
-            <small class="text-muted">Registered Office:</small> Seattle, WA, United States<br>
-            <small class="text-muted">Locality:</small> 
+            <strong>Mitochondria digital Millennium services</strong><br>
+            <small class="text-muted">---</small>Site & Locality : Palayampatti Aruppukottai<br>
+            <small class="text-muted">---</small> 
             <a href="http://vhnsnc.edu.in/index.php" class="text-white text-decoration-underline hover-glow" target="_blank">
-              <b>Locality [REMOTE]<br> :VHN Senthikumara Nadar College, Virudhunagar</b></br>
+              <b>Hosted & Developed on<br>: Central Library of VHNSN college</b></br>
             </a>
           </p>
           <p class="mb-0">
@@ -323,7 +358,7 @@
       <div class="row align-items-center">
         <div class="col-md-6 text-center text-md-start">
           <p class="mb-0 small">
-            © 2025 <strong>Mitochondria Corporation</strong> ALL RIGHTS RESERVED.<br>
+            © 2026 <strong>Mitochondria Corporation</strong> ALL RIGHTS RESERVED includes LOGO and Branding names.<br>
             Powered by <a href="https://drive.google.com/file/d/1LnOBGp3FzNR6ulYiUOwB15M2O8BoSBk2/view?usp=drive_link" target="_blank" class="text-warning hover-glow text-decoration-underline">Mitochondria Digital Millennium Services</a>
           </p>
         </div>
@@ -336,10 +371,46 @@
     </div>
   </footer>
 
-  <!-- Bootstrap + Custom Scripts -->
+  <!-- Bootstrap + Motion One + Custom Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Motion One (lightweight & modern animation library) -->
+  <script type="module">
+    import { animate, inView } from "https://cdn.jsdelivr.net/npm/motion@12.29.2/+esm"
+
+    // Services cards – slide from sides alternately
+    inView(".card.animate-on-scroll", (element) => {
+      animate(
+        element,
+        { opacity: 1, x: 0, scale: 1 },
+        { duration: 0.8, easing: [0.17, 0.55, 0.55, 1] }
+      )
+      return () => animate(element, { opacity: 0, x: element.getBoundingClientRect().left < window.innerWidth / 2 ? -60 : 60 })
+    }, { margin: "-100px" })
+
+    // Quick Actions section – subtle scale + fade
+    inView(".quick-gadgets.animate-on-scroll", (element) => {
+      animate(element, { opacity: 1, scale: 1, y: 0 }, { duration: 0.9, easing: "easeOut" })
+    }, { margin: "-80px" })
+
+    // About section – slide up stronger
+    inView(".about-section.animate-on-scroll", (element) => {
+      animate(element, { opacity: 1, y: 0 }, { duration: 1, easing: [0.16, 1, 0.3, 1] })
+    }, { margin: "-120px" })
+
+    // Testimonials section – gentle fade + lift
+    inView(".testimonial-section", (element) => {
+      animate(element, { opacity: 1, y: 0 }, { duration: 1.1, delay: 0.2, easing: "easeOut" })
+    }, { margin: "-150px" })
+
+    // Optional: animate footer columns on scroll (subtle)
+    inView("footer .col-lg-3", (element) => {
+      animate(element, { opacity: 1, y: [30, 0] }, { duration: 0.7, delay: Math.random() * 0.3 })
+    }, { margin: "-200px", once: true })
+  </script>
+
   <script>
-    // Dark Mode Toggle
+    // Your original scripts remain unchanged
     document.getElementById('darkModeToggle').addEventListener('click', () => {
       document.body.classList.toggle('dark-mode');
       const icon = document.querySelector('#darkModeToggle i');
@@ -347,7 +418,6 @@
       icon.classList.toggle('fa-sun');
     });
 
-    // Print, Share, Language, Narrator (your existing code)
     document.getElementById('printBtn').addEventListener('click', () => window.print());
 
     document.getElementById('shareBtn').addEventListener('click', async () => {
@@ -379,11 +449,15 @@
       }
     });
 
-    // Back to Top Button
     document.querySelector('.scrollup').addEventListener('click', (e) => {
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+
+    // If you have scrollToSection function defined elsewhere, keep it
+    function scrollToSection(id) {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    }
   </script>
 </body>
 </html>

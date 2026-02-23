@@ -32,24 +32,37 @@
     }
     .dark-mode .text-muted { color: #aaa !important; }
 
-    /* Banner with Responsive Text */
+    /* Banner with Responsive Text – ONLY THIS BLOCK CHANGED */
     #inner-headline {
-      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), url('img/about-banner.jpg') center/cover no-repeat;
+      background: linear-gradient(rgba(0,0,0,0.68), rgba(0,0,0,0.78)), 
+                  url('img/about-us-background.jpg') center / cover no-repeat;
       min-height: 60vh;
       display: flex;
       align-items: center;
       color: white;
       text-align: center;
+      position: relative;
+    }
+    #inner-headline::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 70%, rgba(255,209,0,0.08) 0%, transparent 60%);
+      pointer-events: none;
     }
     #inner-headline h2 {
       font-size: clamp(2.5rem, 8vw, 5rem);
       font-weight: 800;
       text-shadow: 0 4px 15px rgba(0,0,0,0.7);
+      position: relative;
+      z-index: 2;
     }
     #inner-headline p {
       font-size: clamp(1rem, 3vw, 1.5rem);
       max-width: 800px;
       margin: 0 auto;
+      position: relative;
+      z-index: 2;
     }
 
     /* Quick Gadgets */
@@ -143,7 +156,7 @@
           <li class="nav-item"><a class="nav-link active" href="about.html">About Us</a></li>
           <li class="nav-item"><a class="nav-link" href="Portfolio mitochodria 2nd part.html">Tech-NEWS ROOM</a></li>
           <li class="nav-item"><a class="nav-link" href="portfolio.html">Our Gallery</a></li>
-          <li class="nav-item"><a class="nav-link" href="contact.html">PC-Building Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Join our Community</a></li>
         </ul>
       </div>
     </div>
@@ -156,6 +169,8 @@
       <p>Innovation Meets Discipline. Engineering the Future.</p>
     </div>
   </section>
+
+  <!-- The rest of your page remains 100% unchanged ↓ -->
 
   <!-- Main Content -->
   <section class="container my-5">
@@ -233,12 +248,12 @@
           <div class="text-center team-member">
             <img src="img/team32.jpg" class="img-fluid rounded shadow" alt="">
             <h5 class="mt-3">Nandha Vishnu</h5>
-            <p class="text-muted">CEO - Executive</p>
+            <p class="text-muted">R&D- Executive</p>
           </div>
         </div>
         <div class="col-md-3 col-6">
           <div class="text-center team-member">
-            <img src="img/team24.jpg" class="img-fluid rounded shadow" alt="">
+            <img src="img/logo.png" class="img-fluid rounded shadow" alt="">
             <h5 class="mt-3">Nandha Vishnu</h5>
             <p class="text-muted">CTO - Chief Board</p>
           </div>
@@ -260,47 +275,103 @@
     </div>
   </section>
 
-  <!-- Footer (Same as Code 1) -->
+  <!-- Footer -->
   <footer class="bg-dark text-white py-5 mt-5">
     <div class="container">
       <div class="row g-5">
+
+        <!-- Column 1: Get in Touch -->
         <div class="col-lg-3 col-md-6">
           <h5 class="mb-4 text-warning fw-bold">Get in Touch</h5>
-          <p><strong>Mitochondria Corporation</strong><br>
-            <small class="text-muted">Registered Office:</small> Seattle, WA, United States<br>
-            <small class="text-muted">Locality:</small> 
+          <p class="mb-3">
+            <strong>Mitochondria digital Millennium services</strong><br>
+            <small class="text-muted">---</small>Site & Locality : Palayampatti Aruppukottai<br>
+            <small class="text-muted">---</small> 
             <a href="http://vhnsnc.edu.in/index.php" class="text-white text-decoration-underline hover-glow" target="_blank">
-              <b>VHN Senthikumara Nadar College, Virudhunagar</b>
+              <b>Hosted & Developed on<br>: Central Library of VHNSN college</b></br>
             </a>
           </p>
-          <p><i class="fas fa-phone-alt me-2 text-warning"></i> +91 95975 63183<br>
+          <p class="mb-0">
+            <i class="fas fa-phone-alt me-2 text-warning"></i> +91 95975 63183<br>
             <i class="fas fa-envelope me-2 text-warning"></i> 
             <a href="mailto:Mitochondriadigitalservices@gmail.com" class="text-white hover-glow">
               Mitochondriadigitalservices@gmail.com
             </a>
           </p>
         </div>
-        <!-- Other footer columns same as Code 1 -->
-        <!-- (Quick Links, News, Channels – copied exactly from your Code 1) -->
+
+        <!-- Column 2: Quick Links -->
+        <div class="col-lg-3 col-md-6">
+          <h5 class="mb-4 text-warning fw-bold">Quick Links</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="https://drive.google.com/file/d/11VTXW3D7GXa2IR34xovytb__pcg8SPvp/view?usp=drive_link" class="text-white hover-glow"><i class="fas fa-angle-right me-2"></i>Terms & Conditions</a></li>
+            <li class="mb-2"><a href="https://drive.google.com/file/d/11VTXW3D7GXa2IR34xovytb__pcg8SPvp/view?usp=drive_link" class="text-white hover-glow"><i class="fas fa-angle-right me-2"></i>Disclaimer</a></li>
+            <li class="mb-2"><a href="https://drive.google.com/file/d/11VTXW3D7GXa2IR34xovytb__pcg8SPvp/view?usp=drive_link" class="text-white hover-glow"><i class="fas fa-angle-right me-2"></i>Affiliate Online Business Policy</a></li>
+            <li class="mb-2"><a href="https://docs.google.com/forms/d/e/1FAIpQLScPHe5qM2wbVKaUEHQ8U-kWh3mfHVMLL3B6BBTIasX5ltqusQ/viewform?usp=header" class="text-white hover-glow"><i class="fas fa-angle-right me-2"></i>Feedback</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: News & Insights -->
+        <div class="col-lg-3 col-md-6">
+          <h5 class="mb-4 text-warning fw-bold">News, Economics & Business</h5>
+          <ul class="list-unstyled small">
+            <li class="mb-2"><a href="https://mitochondriadigitalmilleniumservices.blogspot.com/2025/10/0-todays-us-economic-highlights-wsj.html" class="text-white hover-glow">Today's US Economic Highlights (Oct 9, 2025)</a></li>
+            <li class="mb-2"><a href="https://mitochondriadigitalmilleniumservices.blogspot.com/2025/10/todays-tech-highlights-october-9-2025.html" class="text-white hover-glow">NVIDIA, SpaceX, Oracle & more...</a></li>
+            <li class="mb-2"><a href="https://mitochondriadigitalmilleniumservices.blogspot.com/p/your-inner-inventor-fresh-diy.html" class="text-white hover-glow">Fresh DIY Electrical Sparks – Oct 2025</a></li>
+            <li class="mb-2"><a href="https://drive.google.com/file/d/1b85kGOVqdm-Ptr5RhBb36RgDT6z_K9oK/view?usp=sharing" class="text-white hover-glow">Mitochondria Internet Archives</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 4: Our Channels + Social -->
+        <div class="col-lg-3 col-md-6">
+          <h5 class="mb-4 text-warning fw-bold">Visit Our Channels</h5>
+          <ul class="list-unstyled">
+            <li class="mb-3">
+              <a href="https://youtube.com/@techfjordchannel?si=twpivogapypm_ZCY" class="text-white hover-glow d-block">
+                <i class="fab fa-youtube text-danger me-2"></i> Tech-Fjord Channel
+              </a>
+            </li>
+            <li class="mb-3">
+              <a href="https://youtube.com/@mr.manmithvlogs4324?si=uNFMaocArp3ZjONb" class="text-white hover-glow d-block">
+                <i class="fab fa-youtube text-danger me-2"></i> Mr.Manmith Vlogs
+              </a>
+            </li>
+          </ul>
+
+          <div class="mt-4">
+            <h6 class="text-warning mb-3">Follow Us</h6>
+            <a href="#" class="text-white me-3 fs-4 hover-glow"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="text-white me-3 fs-4 hover-glow"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-white me-3 fs-4 hover-glow"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="text-white me-3 fs-4 hover-glow"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-white fs-4 hover-glow"><i class="fab fa-pinterest"></i></a>
+          </div>
+        </div>
       </div>
+
       <hr class="my-5 border-secondary">
+
+      <!-- Sub Footer -->
       <div class="row align-items-center">
         <div class="col-md-6 text-center text-md-start">
-          <p class="mb-0 small">© 2025 <strong>Mitochondria Corporation</strong> ALL RIGHTS RESERVED.<br>
-            Powered by <a href="https://drive.google.com/file/d/1LnOBGp3FzNR6ulYiUOwB15M2O8BoSBk2/view?usp=drive_link" class="text-warning hover-glow">Mitochondria Digital Millennium Services</a>
+          <p class="mb-0 small">
+            © 2026 <strong>Mitochondria Corporation</strong> ALL RIGHTS RESERVED includes LOGO and Branding names.<br>
+            Powered by <a href="https://drive.google.com/file/d/1LnOBGp3FzNR6ulYiUOwB15M2O8BoSBk2/view?usp=drive_link" target="_blank" class="text-warning hover-glow text-decoration-underline">Mitochondria Digital Millennium Services</a>
           </p>
         </div>
         <div class="col-md-6 text-center text-md-end">
-          <a href="#" class="btn btn-outline-warning btn-sm rounded-pill px-4 scrollup">Back to Top</a>
+          <a href="#" class="btn btn-outline-warning btn-sm rounded-pill px-4 scrollup">
+            Back to Top
+          </a>
         </div>
       </div>
     </div>
   </footer>
 
-  <!-- Scripts -->
+  <!-- Bootstrap + Custom Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Dark Mode
+    // Dark Mode Toggle
     document.getElementById('darkModeToggle').addEventListener('click', () => {
       document.body.classList.toggle('dark-mode');
       const icon = document.querySelector('#darkModeToggle i');
@@ -308,28 +379,25 @@
       icon.classList.toggle('fa-sun');
     });
 
-    // Print
-    document.getElementById('printBtn').onclick = () => window.print();
+    // Print, Share, Language, Narrator
+    document.getElementById('printBtn').addEventListener('click', () => window.print());
 
-    // Share
-    document.getElementById('shareBtn').onclick = async () => {
+    document.getElementById('shareBtn').addEventListener('click', async () => {
       if (navigator.share) {
-        try { await navigator.share({ title: document.title, url: location.href }); }
-        catch { alert('Sharing canceled'); }
+        try { await navigator.share({ title: document.title, url: window.location.href }); }
+        catch(err) { alert('Sharing canceled'); }
       } else {
-        navigator.clipboard.writeText(location.href);
-        alert('Link copied!');
+        navigator.clipboard.writeText(window.location.href);
+        alert('Link copied to clipboard!');
       }
-    };
+    });
 
-    // Language Toggle
-    document.getElementById('langBtn').onclick = function() {
+    document.getElementById('langBtn').addEventListener('click', function() {
       this.textContent = this.textContent === 'EN' ? 'TA' : 'EN';
-    };
+    });
 
-    // Narrator
     let utterance;
-    document.getElementById('narratorBtn').onclick = () => {
+    document.getElementById('narratorBtn').addEventListener('click', () => {
       if ('speechSynthesis' in window) {
         if (speechSynthesis.speaking) {
           speechSynthesis.cancel();
@@ -341,13 +409,13 @@
           speechSynthesis.speak(utterance);
         }
       }
-    };
+    });
 
-    // Scroll to Top
-    document.querySelector('.scrollup').onclick = (e) => {
+    // Back to Top Button
+    document.querySelector('.scrollup').addEventListener('click', (e) => {
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+    });
   </script>
 </body>
 </html>

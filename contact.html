@@ -10,101 +10,156 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
 
+  <!-- AOS - Animate On Scroll -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
   <style>
     :root {
       --primary: #ffd000;
-      --dark-bg: #1a1a1a;
+      --dark-bg: #0f0f0f;
+      --dark-surface: #1a1a1a;
       --dark-text: #e0e0e0;
       --light-bg: #f8f9fa;
+      --light-surface: #ffffff;
+      --glow: rgba(255, 209, 0, 0.25);
     }
     body { 
-      transition: background-color 0.4s, color 0.4s; 
-      font-family: 'Segoe UI', sans-serif; 
+      transition: background-color 0.6s ease, color 0.6s ease; 
+      font-family: 'Segoe UI', system-ui, sans-serif; 
       background-color: var(--light-bg);
+      overflow-x: hidden;
+      scroll-behavior: smooth;
     }
     .dark-mode { 
       background-color: var(--dark-bg) !important; 
       color: var(--dark-text) !important; 
     }
-    .dark-mode .bg-light, .dark-mode .card, .dark-mode .navbar { 
-      background-color: #2c2c2c !important; 
-      border-color: #444 !important; 
+    .dark-mode .bg-light, .dark-mode .card, .dark-mode .navbar, 
+    .dark-mode .quick-gadgets, .dark-mode footer { 
+      background-color: var(--dark-surface) !important; 
+      border-color: #333 !important; 
     }
-    .dark-mode .text-muted { color: #aaa !important; }
-    .dark-mode .form-control { background-color: #333; color: #fff; border-color: #555; }
+    .dark-mode .text-muted { color: #bbb !important; }
+    .dark-mode .form-control { background-color: #222; color: #eee; border-color: #444; }
 
     .page-header {
-      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('img/slides/1.jpg') center/cover no-repeat;
+      background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.85)), url('img/slides/1.jpg') center/cover no-repeat fixed;
       color: white;
-      padding: 100px 20px;
+      padding: 140px 20px 100px;
       text-align: center;
-      border-radius: 0 0 20px 20px;
+      border-radius: 0 0 30px 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 70%, rgba(255,209,0,0.12), transparent 60%);
+      pointer-events: none;
     }
     .page-header h2 {
-      font-size: clamp(2rem, 6vw, 4rem);
-      font-weight: 800;
+      font-size: clamp(2.8rem, 8vw, 5.5rem);
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      text-shadow: 0 6px 20px rgba(0,0,0,0.7);
+    }
+
+    /* Form enhancements */
+    .form-floating > label {
+      color: #888;
+      transition: all 0.3s ease;
+    }
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.25rem var(--glow);
+    }
+    .form-control:focus + label,
+    .form-floating > .form-control:not(:placeholder-shown) + label {
+      color: var(--primary);
+      transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+    }
+    .btn-submit {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .btn-submit:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 10px 30px rgba(255,209,0,0.4);
+    }
+    .btn-submit.loading::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shine 1.5s infinite;
+    }
+    @keyframes shine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
     }
 
     .quick-gadgets {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, rgba(102,126,234,0.9), rgba(118,75,162,0.9));
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.15);
       color: white;
-      border-radius: 15px;
-      padding: 25px;
-      margin: 30px 0;
+      border-radius: 24px;
+      padding: 45px 30px;
+      margin: 60px 0;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.25);
+      transition: transform 0.5s ease;
     }
-    .quick-gadgets .btn { margin: 8px; font-size: 1.1rem; }
+    .quick-gadgets:hover {
+      transform: translateY(-8px);
+    }
 
-    .floating-controls {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
     .floating-controls button {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      border: none;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-      font-size: 1.2rem;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .floating-controls button:hover {
+      transform: translateY(-8px) scale(1.15);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.4);
     }
 
-    /* Footer Glow */
+    .alert {
+      padding: 18px;
+      border-radius: 12px;
+      font-weight: 600;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease;
+      margin-bottom: 25px;
+    }
+    .alert.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .alert-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
     .hover-glow {
-      transition: all 0.3s ease;
+      transition: all 0.35s ease;
     }
     .hover-glow:hover {
       color: var(--primary) !important;
-      text-shadow: 0 0 15px rgba(255, 209, 0, 0.8);
-      transform: translateY(-3px);
-    }
-    .scrollup {
-      transition: all 0.4s ease;
+      text-shadow: 0 0 18px rgba(255, 209, 0, 0.9);
+      transform: translateY(-4px);
     }
     .scrollup:hover {
       background: var(--primary) !important;
       color: #000 !important;
-      transform: translateY(-6px);
-      box-shadow: 0 12px 25px rgba(255, 209, 0, 0.5);
+      transform: translateY(-10px);
+      box-shadow: 0 15px 35px rgba(255, 209, 0, 0.6);
     }
-
-    .alert {
-      padding: 15px;
-      border-radius: 10px;
-      font-weight: 600;
-      display: none;
-      margin-bottom: 20px;
-    }
-    .alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-    .alert-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
   </style>
 </head>
 <body class="bg-light">
 
-  <!-- Floating Controls -->
+  <!-- Floating Controls (unchanged) -->
   <div class="floating-controls">
     <button id="darkModeToggle" class="btn btn-warning" title="Dark Mode"><i class="fas fa-moon"></i></button>
     <button id="printBtn" class="btn btn-info text-white" title="Print"><i class="fas fa-print"></i></button>
@@ -113,7 +168,7 @@
     <button id="narratorBtn" class="btn btn-danger" title="Read Aloud"><i class="fas fa-volume-up"></i></button>
   </div>
 
-  <!-- Navbar (Same as Code 1) -->
+  <!-- Navbar (unchanged) -->
   <header class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
     <div class="container">
       <a class="navbar-brand" href="index.html">
@@ -128,17 +183,17 @@
           <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
           <li class="nav-item"><a class="nav-link" href="Portfolio mitochodria 2nd part.html">Tech-NEWS ROOM</a></li>
           <li class="nav-item"><a class="nav-link" href="portfolio.html">Our Gallery</a></li>
-          <li class="nav-item"><a class="nav-link active" href="contact.html">PC-Building Services</a></li>
+          <li class="nav-item"><a class="nav-link active" href="contact.html">Join our Community</a></li>
         </ul>
       </div>
     </div>
   </header>
 
   <!-- Page Header Banner -->
-  <section class="page-header">
+  <section class="page-header" data-aos="fade-down" data-aos-duration="1000">
     <div class="container">
-      <h2>Contact Us !<br>We're Here 24/7</h2>
-      <p class="lead mt-3">PC Building • Software Support • Real-time Help</p>
+      <h2 data-aos="fade-up" data-aos-delay="200">Contact Us !<br>We're Here 24/7</h2>
+      <p class="lead mt-4 fs-3" data-aos="fade-up" data-aos-delay="400">Tech guidance • Support • Real-time Help</p>
     </div>
   </section>
 
@@ -147,10 +202,10 @@
     <div class="row g-5">
 
       <!-- Contact Form -->
-      <div class="col-lg-6">
-        <div class="card shadow-sm h-100 border-0">
-          <div class="card-body p-4">
-            <p class="lead">Drop us a message — we reply fast!</p>
+      <div class="col-lg-6" data-aos="fade-right" data-aos-duration="900">
+        <div class="card shadow-lg h-100 border-0 overflow-hidden">
+          <div class="card-body p-5">
+            <p class="lead mb-4" data-aos="fade-up" data-aos-delay="100">Drop us a message — we reply fast!</p>
 
             <div class="alert alert-success" id="contactSuccess">
               <strong>Thank You!</strong> Your message has been sent successfully. We'll reply within 24 hours!
@@ -160,40 +215,40 @@
             </div>
 
             <form action="https://formspree.io/f/xqanyglr" method="POST" id="contact-form">
-              <div class="mb-3">
-                <label class="form-label">Name*</label>
-                <input type="text" class="form-control form-control-lg" name="name" required placeholder="Your full name">
+              <div class="mb-4 form-floating" data-aos="fade-up" data-aos-delay="150">
+                <input type="text" class="form-control form-control-lg" id="name" name="name" required placeholder="Your full name">
+                <label for="name">Name*</label>
               </div>
-              <div class="mb-3">
-                <label class="form-label">Email*</label>
-                <input type="email" class="form-control form-control-lg" name="_replyto" required placeholder="you@example.com">
+              <div class="mb-4 form-floating" data-aos="fade-up" data-aos-delay="200">
+                <input type="email" class="form-control form-control-lg" id="email" name="_replyto" required placeholder="you@example.com">
+                <label for="email">Email*</label>
               </div>
-              <div class="mb-3">
-                <label class="form-label">Subject*</label>
-                <input type="text" class="form-control form-control-lg" name="subject" required placeholder="e.g. Need Gaming PC Build">
+              <div class="mb-4 form-floating" data-aos="fade-up" data-aos-delay="250">
+                <input type="text" class="form-control form-control-lg" id="subject" name="subject" required placeholder="e.g. Need Gaming PC Build">
+                <label for="subject">Subject*</label>
               </div>
-              <div class="mb-4">
-                <label class="form-label">Message*</label>
-                <textarea class="form-control" rows="6" name="message" required placeholder="Tell us how we can help..."></textarea>
+              <div class="mb-5 form-floating" data-aos="fade-up" data-aos-delay="300">
+                <textarea class="form-control" id="message" rows="6" name="message" required placeholder="Tell us how we can help..." style="height: 140px;"></textarea>
+                <label for="message">Message*</label>
               </div>
               <input type="text" name="_gotcha" style="display:none">
               <input type="hidden" name="_subject" value="New Contact Form Submission – Mitochondria">
-              <button type="submit" class="btn btn-warning btn-lg px-5">Send Message</button>
+              <button type="submit" class="btn btn-warning btn-lg px-5 btn-submit" id="submitBtn">Drop Message</button>
             </form>
           </div>
         </div>
       </div>
 
       <!-- Google Map -->
-      <div class="col-lg-6">
-        <div class="ratio ratio-16x9 rounded shadow-lg overflow-hidden">
+      <div class="col-lg-6" data-aos="fade-left" data-aos-duration="900" data-aos-delay="200">
+        <div class="ratio ratio-16x9 rounded-4 shadow-lg overflow-hidden border border-4 border-warning border-opacity-25">
           <iframe 
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3930.294842397152!2d77.95456761479762!3d9.581574993147006!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b06cf5f0b3b3b3b%3A0x9e9e9e9e9e9e9e9e!2sV.H.N.S.N%20College!5e0!3m2!1sen!2sin!4v1700000000000" 
-            width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy">
+            width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
           </iframe>
         </div>
-        <div class="text-center mt-3">
-          <p class="text-muted"><strong>Locality:</strong> V.H.N.S.N College, Virudhunagar</p>
+        <div class="text-center mt-4">
+          <p class="text-muted fs-5 fw-bold" data-aos="fade-up" data-aos-delay="400"><strong>Locality:</strong> V.H.N.S.N College, Virudhunagar</p>
         </div>
       </div>
 
@@ -201,32 +256,34 @@
   </section>
 
   <!-- Quick Gadgets -->
-  <section class="container">
+  <section class="container" data-aos="zoom-in" data-aos-duration="800">
     <div class="quick-gadgets text-center">
-      <h2 class="mb-4">Quick Actions</h2>
-      <div class="d-flex flex-wrap justify-content-center gap-3">
-        <button class="btn btn-light btn-lg" onclick="location.href='nandha.html'"><i class="fas fa-shopping-cart"></i> Shop Now</button>
-        <button class="btn btn-light btn-lg" onclick="location.href='contact.html'"><i class="fas fa-wrench"></i> Book PC Build</button>
-        <button class="btn btn-light btn-lg" onclick="location.href='Portfolio mitochodria 2nd part.html'"><i class="fas fa-newspaper"></i> Tech News</button>
-        <button class="btn btn-light btn-lg" onclick="document.getElementById('contact-form').scrollIntoView({behavior:'smooth'})">
-          <i class="fas fa-envelope"></i> Contact Us
+      <h2 class="mb-5" data-aos="fade-up" data-aos-delay="100">Quick Actions</h2>
+      <div class="d-flex flex-wrap justify-content-center gap-4">
+        <button class="btn btn-light btn-lg px-4 py-3" onclick="location.href='nandha.html'" data-aos="fade-up" data-aos-delay="150"><i class="fas fa-shopping-cart me-2"></i> Shop Now</button>
+        <button class="btn btn-light btn-lg px-4 py-3" onclick="location.href='contact.html'" data-aos="fade-up" data-aos-delay="200"><i class="fas fa-wrench me-2"></i> Book PC Build</button>
+        <button class="btn btn-light btn-lg px-4 py-3" onclick="location.href='Portfolio mitochodria 2nd part.html'" data-aos="fade-up" data-aos-delay="250"><i class="fas fa-newspaper me-2"></i> Tech News</button>
+        <button class="btn btn-light btn-lg px-4 py-3" onclick="document.getElementById('contact-form').scrollIntoView({behavior:'smooth'})" data-aos="fade-up" data-aos-delay="300">
+          <i class="fas fa-envelope me-2"></i> Contact Us
         </button>
       </div>
     </div>
   </section>
 
-  <!-- Glowing Footer (Exact from Code 1) -->
-  <footer class="bg-dark text-white py-5 mt-5">
+  <!-- Glowing Footer (unchanged content, added AOS fade) -->
+  <footer class="bg-dark text-white py-5 mt-5" data-aos="fade-up" data-aos-duration="1000">
     <div class="container">
       <div class="row g-5">
+
+        <!-- Column 1: Get in Touch -->
         <div class="col-lg-3 col-md-6">
           <h5 class="mb-4 text-warning fw-bold">Get in Touch</h5>
           <p class="mb-3">
-            <strong>Mitochondria Corporation</strong><br>
-            <small class="text-muted">Registered Office:</small> Seattle, WA, United States<br>
-            <small class="text-muted">Locality:</small> 
+            <strong>Mitochondria digital Millennium services</strong><br>
+            <small class="text-muted">---</small>Site & Locality : Palayampatti Aruppukottai<br>
+            <small class="text-muted">---</small> 
             <a href="http://vhnsnc.edu.in/index.php" class="text-white text-decoration-underline hover-glow" target="_blank">
-              <b>VHN Senthikumara Nadar College, Virudhunagar</b>
+              <b>Hosted & Developed on<br>: Central Library of VHNSN college</b></br>
             </a>
           </p>
           <p class="mb-0">
@@ -237,47 +294,70 @@
             </a>
           </p>
         </div>
+
+        <!-- Column 2: Quick Links -->
         <div class="col-lg-3 col-md-6">
           <h5 class="mb-4 text-warning fw-bold">Quick Links</h5>
           <ul class="list-unstyled">
             <li class="mb-2"><a href="https://drive.google.com/file/d/11VTXW3D7GXa2IR34xovytb__pcg8SPvp/view?usp=drive_link" class="text-white hover-glow"><i class="fas fa-angle-right me-2"></i>Terms & Conditions</a></li>
             <li class="mb-2"><a href="https://drive.google.com/file/d/11VTXW3D7GXa2IR34xovytb__pcg8SPvp/view?usp=drive_link" class="text-white hover-glow"><i class="fas fa-angle-right me-2"></i>Disclaimer</a></li>
+            <li class="mb-2"><a href="https://drive.google.com/file/d/11VTXW3D7GXa2IR34xovytb__pcg8SPvp/view?usp=drive_link" class="text-white hover-glow"><i class="fas fa-angle-right me-2"></i>Affiliate Online Business Policy</a></li>
             <li class="mb-2"><a href="https://docs.google.com/forms/d/e/1FAIpQLScPHe5qM2wbVKaUEHQ8U-kWh3mfHVMLL3B6BBTIasX5ltqusQ/viewform?usp=header" class="text-white hover-glow"><i class="fas fa-angle-right me-2"></i>Feedback</a></li>
           </ul>
         </div>
+
+        <!-- Column 3: News & Insights -->
         <div class="col-lg-3 col-md-6">
-          <h5 class="mb-4 text-warning fw-bold">News & Insights</h5>
+          <h5 class="mb-4 text-warning fw-bold">News, Economics & Business</h5>
           <ul class="list-unstyled small">
-            <li class="mb-2"><a href="https://mitochondriadigitalmilleniumservices.blogspot.com/2025/10/0-todays-us-economic-highlights-wsj.html" class="text-white hover-glow">Today's US Economic Highlights</a></li>
-            <li class="mb-2"><a href="https://mitochondriadigitalmilleniumservices.blogspot.com/2025/10/todays-tech-highlights-october-9-2025.html" class="text-white hover-glow">NVIDIA, SpaceX & more...</a></li>
+            <li class="mb-2"><a href="https://mitochondriadigitalmilleniumservices.blogspot.com/2025/10/0-todays-us-economic-highlights-wsj.html" class="text-white hover-glow">Today's US Economic Highlights (Oct 9, 2025)</a></li>
+            <li class="mb-2"><a href="https://mitochondriadigitalmilleniumservices.blogspot.com/2025/10/todays-tech-highlights-october-9-2025.html" class="text-white hover-glow">NVIDIA, SpaceX, Oracle & more...</a></li>
+            <li class="mb-2"><a href="https://mitochondriadigitalmilleniumservices.blogspot.com/p/your-inner-inventor-fresh-diy.html" class="text-white hover-glow">Fresh DIY Electrical Sparks – Oct 2025</a></li>
+            <li class="mb-2"><a href="https://drive.google.com/file/d/1b85kGOVqdm-Ptr5RhBb36RgDT6z_K9oK/view?usp=sharing" class="text-white hover-glow">Mitochondria Internet Archives</a></li>
           </ul>
         </div>
+
+        <!-- Column 4: Our Channels + Social -->
         <div class="col-lg-3 col-md-6">
           <h5 class="mb-4 text-warning fw-bold">Visit Our Channels</h5>
           <ul class="list-unstyled">
-            <li class="mb-3"><a href="https://youtube.com/@techfjordchannel" class="text-white hover-glow d-block"><i class="fab fa-youtube text-danger me-2"></i> Tech-Fjord Channel</a></li>
-            <li class="mb-3"><a href="https://youtube.com/@mr.manmithvlogs4324" class="text-white hover-glow d-block"><i class="fab fa-youtube text-danger me-2"></i> Mr.Manmith Vlogs</a></li>
+            <li class="mb-3">
+              <a href="https://youtube.com/@techfjordchannel?si=twpivogapypm_ZCY" class="text-white hover-glow d-block">
+                <i class="fab fa-youtube text-danger me-2"></i> Tech-Fjord Channel
+              </a>
+            </li>
+            <li class="mb-3">
+              <a href="https://youtube.com/@mr.manmithvlogs4324?si=uNFMaocArp3ZjONb" class="text-white hover-glow d-block">
+                <i class="fab fa-youtube text-danger me-2"></i> Mr.Manmith Vlogs
+              </a>
+            </li>
           </ul>
+
           <div class="mt-4">
             <h6 class="text-warning mb-3">Follow Us</h6>
             <a href="#" class="text-white me-3 fs-4 hover-glow"><i class="fab fa-facebook-f"></i></a>
             <a href="#" class="text-white me-3 fs-4 hover-glow"><i class="fab fa-twitter"></i></a>
             <a href="#" class="text-white me-3 fs-4 hover-glow"><i class="fab fa-linkedin-in"></i></a>
             <a href="#" class="text-white me-3 fs-4 hover-glow"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-white fs-4 hover-glow"><i class="fab fa-pinterest"></i></a>
           </div>
         </div>
       </div>
 
       <hr class="my-5 border-secondary">
+
+      <!-- Sub Footer -->
       <div class="row align-items-center">
         <div class="col-md-6 text-center text-md-start">
           <p class="mb-0 small">
-            © 2025 <strong>Mitochondria Corporation</strong> ALL RIGHTS RESERVED.<br>
+            © 2026 <strong>Mitochondria Corporation</strong> ALL RIGHTS RESERVED includes LOGO and Branding names.<br>
             Powered by <a href="https://drive.google.com/file/d/1LnOBGp3FzNR6ulYiUOwB15M2O8BoSBk2/view?usp=drive_link" target="_blank" class="text-warning hover-glow text-decoration-underline">Mitochondria Digital Millennium Services</a>
           </p>
         </div>
         <div class="col-md-6 text-center text-md-end">
-          <a href="#" class="btn btn-outline-warning btn-sm rounded-pill px-4 scrollup">Back to Top</a>
+          <a href="#" class="btn btn-outline-warning btn-sm rounded-pill px-4 scrollup">
+            Back to Top
+          </a>
         </div>
       </div>
     </div>
@@ -285,8 +365,17 @@
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
   <script>
-    // Dark Mode
+    AOS.init({
+      once: true,
+      duration: 900,
+      offset: 80,
+      easing: 'ease-out-cubic'
+    });
+
+    // Dark Mode Toggle
     document.getElementById('darkModeToggle').addEventListener('click', () => {
       document.body.classList.toggle('dark-mode');
       const icon = document.querySelector('#darkModeToggle i');
@@ -294,26 +383,31 @@
       icon.classList.toggle('fa-sun');
     });
 
-    // Print, Share, Language, Narrator
+    // Print, Share, Language, Narrator (unchanged)
     document.getElementById('printBtn').addEventListener('click', () => window.print());
+
     document.getElementById('shareBtn').addEventListener('click', async () => {
       if (navigator.share) {
-        try { await navigator.share({ title: document.title, url: location.href }); }
-        catch { alert('Sharing canceled'); }
+        try { await navigator.share({ title: document.title, url: window.location.href }); }
+        catch(err) { alert('Sharing canceled'); }
       } else {
-        navigator.clipboard.writeText(location.href);
-        alert('Link copied!');
+        navigator.clipboard.writeText(window.location.href);
+        alert('Link copied to clipboard!');
       }
     });
+
     document.getElementById('langBtn').addEventListener('click', function() {
       this.textContent = this.textContent === 'EN' ? 'TA' : 'EN';
     });
+
     let utterance;
     document.getElementById('narratorBtn').addEventListener('click', () => {
       if ('speechSynthesis' in window) {
-        if (speechSynthesis.speaking) speechSynthesis.cancel();
-        else {
-          utterance = new SpeechSynthesisUtterance(document.body.innerText);
+        if (speechSynthesis.speaking) {
+          speechSynthesis.cancel();
+        } else {
+          const text = document.body.innerText;
+          utterance = new SpeechSynthesisUtterance(text);
           utterance.lang = 'en-US';
           utterance.rate = 0.9;
           speechSynthesis.speak(utterance);
@@ -321,18 +415,34 @@
       }
     });
 
-    // Back to Top
+    // Back to Top Button
     document.querySelector('.scrollup').addEventListener('click', (e) => {
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    // Formspree Success Message
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('success')) {
-      document.getElementById('contactSuccess').style.display = 'block';
-      setTimeout(() => document.getElementById('contactSuccess').style.display = 'none', 10000);
-    }
+    // Form submit animation + alerts
+    const form = document.getElementById('contact-form');
+    const successAlert = document.getElementById('contactSuccess');
+    const errorAlert = document.getElementById('contactError');
+    const submitBtn = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', function(e) {
+      submitBtn.classList.add('loading');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+    });
+
+    // Optional: Listen for Formspree response (via iframe or AJAX if upgraded later)
+    // For now, basic success simulation after submit (real success depends on Formspree webhook)
+    form.addEventListener('formspree-ajax:success', () => {  // if you add AJAX later
+      successAlert.classList.add('show');
+      errorAlert.classList.remove('show');
+      submitBtn.classList.remove('loading');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Sent!';
+      setTimeout(() => { successAlert.classList.remove('show'); }, 8000);
+    });
   </script>
 </body>
 </html>
