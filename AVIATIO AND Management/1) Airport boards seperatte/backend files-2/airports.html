@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airport Information & Services - Mitochondria DMS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/airports.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <h1>🛫 Mitochondria DMS</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="airports.html" class="active">Airports</a></li>
+                <li><a href="#flights">Flights</a></li>
+                <li><a href="#health">Health</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="airport-main">
+        <h1>🌍 Airport Information & Control Center</h1>
+        <p class="subtitle">Search, monitor, and manage airport operations worldwide</p>
+
+        <!-- SECTION 1: AIRPORT SEARCH / SELECTOR -->
+        <section class="airport-search">
+            <h2>🔍 Search Airport Information</h2>
+            <div class="search-container">
+                <input 
+                    type="text" 
+                    id="airportSearch" 
+                    placeholder="Enter airport name or code (e.g., DEL, DXB, JFK, LAX)" 
+                    class="search-input"
+                >
+                <select id="countryFilter" class="search-input">
+                    <option value="">Select Country</option>
+                    <option value="india">India</option>
+                    <option value="uae">UAE</option>
+                    <option value="usa">USA</option>
+                    <option value="uk">UK</option>
+                </select>
+                <button class="search-button" onclick="searchAirport()">Search</button>
+            </div>
+            <div id="searchResults" class="search-results"></div>
+        </section>
+
+        <!-- SECTION 2: LIVE AIRPORT STATUS -->
+        <section class="airport-status">
+            <h2>📊 Live Airport Operations Status</h2>
+            <div class="status-cards">
+                <div class="status-card">
+                    <h3>Indira Gandhi International Airport</h3>
+                    <p><strong>Code:</strong> DEL</p>
+                    <p><strong>Status:</strong> <span class="status-operational">Operational</span></p>
+                    <p><strong>Weather:</strong> Clear</p>
+                    <p><strong>Departure Delay:</strong> <span class="delay-minimal">5 mins avg</span></p>
+                    <p><strong>Arrival Delay:</strong> <span class="delay-minimal">3 mins avg</span></p>
+                </div>
+
+                <div class="status-card">
+                    <h3>Dubai International Airport</h3>
+                    <p><strong>Code:</strong> DXB</p>
+                    <p><strong>Status:</strong> <span class="status-operational">Operational</span></p>
+                    <p><strong>Weather:</strong> Clear, Sunny</p>
+                    <p><strong>Departure Delay:</strong> <span class="delay-minimal">2 mins avg</span></p>
+                    <p><strong>Arrival Delay:</strong> <span class="delay-minimal">1 mins avg</span></p>
+                </div>
+
+                <div class="status-card">
+                    <h3>John F. Kennedy International</h3>
+                    <p><strong>Code:</strong> JFK</p>
+                    <p><strong>Status:</strong> <span class="status-operational">Operational</span></p>
+                    <p><strong>Weather:</strong> Partly Cloudy</p>
+                    <p><strong>Departure Delay:</strong> <span class="delay-moderate">12 mins avg</span></p>
+                    <p><strong>Arrival Delay:</strong> <span class="delay-moderate">8 mins avg</span></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: DEPARTURE & ARRIVAL BOARDS -->
+        <section class="flight-boards">
+            <div class="board-container">
+                <div class="departure-board">
+                    <h2>✈️ Departure Flights</h2>
+                    <table class="flight-table">
+                        <thead>
+                            <tr>
+                                <th>Flight</th>
+                                <th>Destination</th>
+                                <th>Time</th>
+                                <th>Gate</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>AI-101</td>
+                                <td>Mumbai (BOM)</td>
+                                <td>14:30</td>
+                                <td>A7</td>
+                                <td><span class="status-on-time">On Time</span></td>
+                            </tr>
+                            <tr>
+                                <td>AI-205</td>
+                                <td>Bangalore (BLR)</td>
+                                <td>15:00</td>
+                                <td>B12</td>
+                                <td><span class="status-boarding">Boarding</span></td>
+                            </tr>
+                            <tr>
+                                <td>6E-330</td>
+                                <td>Hyderabad (HYD)</td>
+                                <td>15:45</td>
+                                <td>C5</td>
+                                <td><span class="status-delayed">Delayed</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="arrival-board">
+                    <h2>🛬 Arrival Flights</h2>
+                    <table class="flight-table">
+                        <thead>
+                            <tr>
+                                <th>Flight</th>
+                                <th>Origin</th>
+                                <th>Time</th>
+                                <th>Gate</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>AI-102</td>
+                                <td>Mumbai (BOM)</td>
+                                <td>16:15</td>
+                                <td>D8</td>
+                                <td><span class="status-on-time">On Time</span></td>
+                            </tr>
+                            <tr>
+                                <td>BA-117</td>
+                                <td>London (LHR)</td>
+                                <td>22:45</td>
+                                <td>E3</td>
+                                <td><span class="status-on-time">On Time</span></td>
+                            </tr>
+                            <tr>
+                                <td>EK-555</td>
+                                <td>Dubai (DXB)</td>
+                                <td>12:30</td>
+                                <td>A2</td>
+                                <td><span class="status-landed">Landed</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: AIRPORT FACILITIES & ACCESSIBILITY -->
+        <section class="facilities">
+            <h2>♿ Passenger Facilities & Accessibility</h2>
+            <div class="facilities-grid">
+                <div class="facility-item">
+                    <h3>♿ Wheelchair Assistance</h3>
+                    <p>Available at gates, counters, and throughout terminals</p>
+                    <p><strong>Contact:</strong> +91-XXXXX-XXXXX</p>
+                </div>
+
+                <div class="facility-item">
+                    <h3>🏥 Medical Center</h3>
+                    <p>24/7 medical facility with emergency support</p>
+                    <p><strong>Location:</strong> Terminal 2, Level 2</p>
+                </div>
+
+                <div class="facility-item">
+                    <h3>💨 Oxygen Support</h3>
+                    <p>Emergency oxygen available at medical centers</p>
+                    <p><strong>Priority:</strong> Senior citizens, patients with respiratory issues</p>
+                </div>
+
+                <div class="facility-item">
+                    <h3>🍽️ Dietary Services</h3>
+                    <p>Special meal options including vegan, gluten-free, and religious restrictions</p>
+                    <p><strong>Available:</strong> All restaurants and catering</p>
+                </div>
+
+                <div class="facility-item">
+                    <h3>🕌 Prayer Rooms</h3>
+                    <p>Multi-faith prayer spaces available</p>
+                    <p><strong>Locations:</strong> Each terminal level</p>
+                </div>
+
+                <div class="facility-item">
+                    <h3>🛏️ Rest Areas</h3>
+                    <p>Comfortable rest lounges and sleeping pods</p>
+                    <p><strong>Available:</strong> 24/7 access</p>
+                </div>
+
+                <div class="facility-item">
+                    <h3>🚑 Emergency Medical Staff</h3>
+                    <p>Trained emergency response teams on standby</p>
+                    <p><strong>Response Time:</strong> &lt; 5 minutes</p>
+                </div>
+
+                <div class="facility-item">
+                    <h3>♿ Accessible Restrooms</h3>
+                    <p>Disabled-friendly facilities with assistance buttons</p>
+                    <p><strong>Locations:</strong> All terminals</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: AIRPORT MEDICAL & HEALTH SUPPORT (UNIQUE FEATURE) -->
+        <section class="health-support">
+            <h2>🏥 Airport Medical & Health Support Services</h2>
+            <div class="health-services">
+                <div class="health-card">
+                    <h3>🏥 Airport Medical Clinic</h3>
+                    <p><strong>Hours:</strong> 24/7</p>
+                    <p><strong>Services:</strong> General consultation, first aid, medication</p>
+                    <p><strong>Doctors on duty:</strong> 4</p>
+                    <p><strong>Contact:</strong> +91-XXXXX-XXXXX | medical@airport.com</p>
+                </div>
+
+                <div class="health-card">
+                    <h3>🚑 Emergency Response Teams</h3>
+                    <p><strong>Response Time:</strong> &lt;5 minutes</p>
+                    <p><strong>Equipment:</strong> AED, defibrillator, stretcher</p>
+                    <p><strong>Trained in:</strong> CPR, emergency stabilization</p>
+                </div>
+
+                <div class="health-card">
+                    <h3>💨 Oxygen Assistance</h3>
+                    <p><strong>Emergency oxygen:</strong> At all gates</p>
+                    <p><strong>Oxygen cylinders:</strong> Available for rent (short flights)</p>
+                    <p><strong>Pre-booking:</strong> Contact 48 hours in advance</p>
+                </div>
+
+                <div class="health-card">
+                    <h3>🛏️ Isolation Rooms</h3>
+                    <p><strong>Purpose:</strong> Contagious passenger management</p>
+                    <p><strong>Capacity:</strong> 5 isolation rooms</p>
+                    <p><strong>Equipment:</strong> Medical monitoring, air filtration</p>
+                </div>
+
+                <div class="health-card">
+                    <h3>🩺 Health Screening Services</h3>
+                    <p><strong>Available:</strong> Temperature checks, health questionnaire</p>
+                    <p><strong>Technology:</strong> Thermal imaging, rapid health assessment</p>
+                    <p><strong>Cost:</strong> Free at entry/exit</p>
+                </div>
+
+                <div class="health-card">
+                    <h3>👨‍⚕️ Specialized Medical Support</h3>
+                    <p><strong>Cardiology:</strong> For heart patients</p>
+                    <p><strong>Respiratory:</strong> For asthma/COPD patients</p>
+                    <p><strong>Mobility:</strong> For elderly/disabled passengers</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: AIRPORT TERMINAL MAP -->
+        <section class="terminal-map">
+            <h2>🗺️ Airport Terminal Map</h2>
+            <div id="map" class="map-container"></div>
+            <div class="map-legend">
+                <p><strong>Map Legend:</strong></p>
+                <p>🔴 Gates | 🟢 Security | 🟡 Medical | 🟣 Restrooms | 🔵 Restaurants</p>
+            </div>
+        </section>
+
+        <!-- SECTION 7: GROUND TRANSPORTATION OPTIONS -->
+        <section class="transportation">
+            <h2>🚗 Ground Transportation Options</h2>
+            <div class="transport-grid">
+                <div class="transport-card">
+                    <h3>🚕 Taxi Services</h3>
+                    <p><strong>Fare:</strong> Meter-based</p>
+                    <p><strong>Stand Location:</strong> Terminal level (Arrivals)</p>
+                    <p><strong>Payment:</strong> Cash, Card, Mobile</p>
+                    <p><strong>Avg Wait Time:</strong> 5-10 minutes</p>
+                </div>
+
+                <div class="transport-card">
+                    <h3>🚇 Metro / Train</h3>
+                    <p><strong>Airport Express Line:</strong> 23 minutes to city center</p>
+                    <p><strong>Frequency:</strong> Every 15 minutes</p>
+                    <p><strong>Fare:</strong> ₹100-150</p>
+                    <p><strong>First Train:</strong> 6:00 AM | Last Train: 11:00 PM</p>
+                </div>
+
+                <div class="transport-card">
+                    <h3>🚌 Bus Services</h3>
+                    <p><strong>Routes:</strong> City buses, intercity, and state buses</p>
+                    <p><strong>Stand Location:</strong> Terminal 2 & 3</p>
+                    <p><strong>Frequency:</strong> Every 30 minutes</p>
+                    <p><strong>Price Range:</strong> ₹50-500 depending on distance</p>
+                </div>
+
+                <div class="transport-card">
+                    <h3>🚗 Car Rental</h3>
+                    <p><strong>Companies:</strong> Hertz, Avis, Budget, Local providers</p>
+                    <p><strong>Counter Location:</strong> Terminal 2 & 3</p>
+                    <p><strong>Vehicles:</strong> Economy, SUV, Luxury</p>
+                    <p><strong>Booking:</strong> On-site or online pre-booking</p>
+                </div>
+
+                <div class="transport-card">
+                    <h3>🚗 Ride-sharing</h3>
+                    <p><strong>Services:</strong> Uber, Ola, Rapido</p>
+                    <p><strong>Pickup Zone:</strong> Level 2, designated area</p>
+                    <p><strong>Average Fare:</strong> ₹400-800 to city center</p>
+                    <p><strong>Booking:</strong> Via mobile app</p>
+                </div>
+
+                <div class="transport-card">
+                    <h3>👥 Shared Shuttle</h3>
+                    <p><strong>Routes:</strong> Hotels, city centers, railway stations</p>
+                    <p><strong>Capacity:</strong> 7-14 passengers</p>
+                    <p><strong>Cost:</strong> ₹200-400 per person</p>
+                    <p><strong>Booking:</strong> Information desk or online</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 8 (OPTIONAL): AIRPORT WEATHER -->
+        <section class="weather">
+            <h2>🌤️ Current Airport Weather</h2>
+            <div class="weather-cards">
+                <div class="weather-card">
+                    <h3>Delhi (DEL)</h3>
+                    <p><strong>Temperature:</strong> 28°C</p>
+                    <p><strong>Wind Speed:</strong> 12 km/h</p>
+                    <p><strong>Visibility:</strong> 5 km</p>
+                    <p><strong>Impact on Flights:</strong> <span class="impact-low">Minimal</span></p>
+                </div>
+
+                <div class="weather-card">
+                    <h3>Dubai (DXB)</h3>
+                    <p><strong>Temperature:</strong> 35°C</p>
+                    <p><strong>Wind Speed:</strong> 8 km/h</p>
+                    <p><strong>Visibility:</strong> 8 km</p>
+                    <p><strong>Impact on Flights:</strong> <span class="impact-low">Minimal</span></p>
+                </div>
+
+                <div class="weather-card">
+                    <h3>New York (JFK)</h3>
+                    <p><strong>Temperature:</strong> 15°C</p>
+                    <p><strong>Wind Speed:</strong> 25 km/h</p>
+                    <p><strong>Visibility:</strong> 6 km</p>
+                    <p><strong>Impact on Flights:</strong> <span class="impact-medium">Moderate</span></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 9 (OPTIONAL): AIRPORT LOUNGES -->
+        <section class="lounges">
+            <h2>🍽️ Airport Lounges</h2>
+            <div class="lounge-grid">
+                <div class="lounge-card">
+                    <h3>Sky Lounge Premium</h3>
+                    <p><strong>Location:</strong> Terminal 2, Level 3</p>
+                    <p><strong>Access:</strong> First/Business class, Premium members</p>
+                    <p><strong>Services:</strong> Fine dining, shower, Wi-Fi, sleeping pods</p>
+                    <p><strong>Hours:</strong> 5:00 AM - 11:00 PM</p>
+                </div>
+
+                <div class="lounge-card">
+                    <h3>Comfort Lounge</h3>
+                    <p><strong>Location:</strong> Terminal 3, Level 2</p>
+                    <p><strong>Access:</strong> Business class, Gold members</p>
+                    <p><strong>Services:</strong> Snacks, beverages, Wi-Fi, seating</p>
+                    <p><strong>Hours:</strong> 6:00 AM - 10:00 PM</p>
+                </div>
+
+                <div class="lounge-card">
+                    <h3>Travel Lounge Express</h3>
+                    <p><strong>Location:</strong> All terminals</p>
+                    <p><strong>Access:</strong> Day pass (₹1000), hourly (₹300)</p>
+                    <p><strong>Services:</strong> Light refreshments, workstations, TV</p>
+                    <p><strong>Hours:</strong> 24/7</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 10 (OPTIONAL): AIRPORT ALERTS & NOTIFICATIONS -->
+        <section class="alerts">
+            <h2>⚠️ Airport Alerts & Notifications</h2>
+            <div class="alerts-list">
+                <div class="alert alert-info">
+                    <p><strong>ℹ️ Terminal 2:</strong> Runway 08R/26L closed for maintenance (10:00 PM - 5:00 AM)</p>
+                </div>
+                <div class="alert alert-warning">
+                    <p><strong>⚠️ Security:</strong> Enhanced security checks in progress. Allow extra 30 minutes</p>
+                </div>
+                <div class="alert alert-success">
+                    <p><strong>✅ Weather:</strong> All weather conditions normal. No flight impacts expected</p>
+                </div>
+                <div class="alert alert-info">
+                    <p><strong>ℹ️ Construction:</strong> Terminal 3 renovation ongoing. Temporary shuttle service active</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER SECTION -->
+        <section class="footer-info">
+            <h2>📞 Emergency & Support Information</h2>
+            <div class="footer-grid">
+                <div class="footer-card">
+                    <h3>Emergency Contacts</h3>
+                    <p>Medical Emergency: +91-XXXXX-XXXXX</p>
+                    <p>Security: +91-XXXXX-XXXXX</p>
+                    <p>Lost & Found: +91-XXXXX-XXXXX</p>
+                </div>
+
+                <div class="footer-card">
+                    <h3>Airport Authority</h3>
+                    <p><a href="https://www.aai.aero" target="_blank">Airports Authority of India</a></p>
+                    <p><a href="https://www.aci.aero" target="_blank">Airports Council International</a></p>
+                </div>
+
+                <div class="footer-card">
+                    <h3>Industry Standards</h3>
+                    <p><a href="https://www.iata.org" target="_blank">International Air Transport Association</a></p>
+                    <p><a href="https://www.icao.int" target="_blank">International Civil Aviation Organization</a></p>
+                </div>
+
+                <div class="footer-card">
+                    <h3>Help & Support</h3>
+                    <p>Email: support@mitochondria-dms.com</p>
+                    <p>Chat: Available 24/7</p>
+                    <p>FAQ: <a href="#faq">View FAQs</a></p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2026 Mitochondria Digital Millennium Services. All rights reserved.</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/airports.js"></script>
+</body>
+</html>

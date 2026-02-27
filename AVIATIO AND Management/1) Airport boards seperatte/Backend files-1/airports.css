@@ -1,0 +1,637 @@
+/* ===== AIRPORTS PAGE SPECIFIC STYLES ===== */
+
+.airport-main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+
+.airport-main h1 {
+    font-size: 2.5rem;
+    color: var(--dark-color);
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 3rem;
+}
+
+/* ===== AIRPORT SEARCH SECTION ===== */
+.airport-search {
+    background: white;
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 3rem;
+}
+
+.airport-search h2 {
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
+
+.search-container {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.search-input {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.75rem 1rem;
+    border: 2px solid #ddd;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.search-button {
+    padding: 0.75rem 2rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.search-button:hover {
+    background-color: #0052a3;
+    transform: translateY(-2px);
+}
+
+.search-results {
+    margin-top: 2rem;
+}
+
+/* ===== AIRPORT STATUS SECTION ===== */
+.airport-status {
+    background: white;
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 3rem;
+}
+
+.airport-status h2 {
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+}
+
+.status-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.status-card {
+    background: linear-gradient(135deg, #f8f9fa, white);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    border-left: 5px solid var(--primary-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.status-card h3 {
+    color: var(--dark-color);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.status-card p {
+    margin-bottom: 0.75rem;
+    color: #555;
+    display: flex;
+    justify-content: space-between;
+}
+
+.status-operational {
+    background-color: var(--success-color);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.delay-minimal {
+    background-color: var(--success-color);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.delay-moderate {
+    background-color: var(--warning-color);
+    color: #333;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+/* ===== FLIGHT BOARDS SECTION ===== */
+.flight-boards {
+    background: white;
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 3rem;
+}
+
+.board-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.departure-board h2,
+.arrival-board h2 {
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.flight-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.flight-table thead {
+    background-color: var(--light-color);
+}
+
+.flight-table th {
+    padding: 1rem;
+    text-align: left;
+    color: var(--dark-color);
+    font-weight: bold;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.flight-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.flight-table tbody tr:hover {
+    background-color: var(--light-color);
+}
+
+.status-on-time {
+    background-color: var(--success-color);
+    color: white;
+    padding: 0.3rem 0.7rem;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
+.status-boarding {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.3rem 0.7rem;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
+.status-delayed {
+    background-color: var(--danger-color);
+    color: white;
+    padding: 0.3rem 0.7rem;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
+.status-landed {
+    background-color: #6c757d;
+    color: white;
+    padding: 0.3rem 0.7rem;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
+/* ===== FACILITIES SECTION ===== */
+.facilities {
+    background: white;
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 3rem;
+}
+
+.facilities h2 {
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+}
+
+.facilities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.facility-item {
+    background: linear-gradient(135deg, #f8f9fa, white);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    border-top: 3px solid var(--secondary-color);
+}
+
+.facility-item h3 {
+    color: var(--dark-color);
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.facility-item p {
+    color: #666;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+/* ===== HEALTH SUPPORT SECTION ===== */
+.health-support {
+    background: white;
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 3rem;
+}
+
+.health-support h2 {
+    color: var(--danger-color);
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+}
+
+.health-services {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.health-card {
+    background: linear-gradient(135deg, #fff5f5, white);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    border-left: 5px solid var(--danger-color);
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.1);
+}
+
+.health-card h3 {
+    color: var(--danger-color);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.health-card p {
+    color: #555;
+    margin-bottom: 0.75rem;
+}
+
+.health-card strong {
+    color: var(--dark-color);
+}
+
+/* ===== TERMINAL MAP SECTION ===== */
+.terminal-map {
+    background: white;
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 3rem;
+}
+
+.terminal-map h2 {
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
+
+.map-container {
+    width: 100%;
+    height: 500px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.map-legend {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: var(--light-color);
+    border-radius: var(--border-radius);
+}
+
+.map-legend p {
+    margin-bottom: 0.5rem;
+}
+
+/* ===== TRANSPORTATION SECTION ===== */
+.transportation {
+    background: white;
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 3rem;
+}
+
+.transportation h2 {
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+}
+
+.transport-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.transport-card {
+    background: linear-gradient(135deg, #e3f2fd, white);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    border-left: 5px solid var(--primary-color);
+    box-shadow: 0 2px 8px rgba(0, 102, 204, 0.1);
+}
+
+.transport-card h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.transport-card p {
+    color: #555;
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+}
+
+/* ===== WEATHER SECTION ===== */
+.weather {
+    background: white;
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 3rem;
+}
+
+.weather h2 {
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+}
+
+.weather-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.weather-card {
+    background: linear-gradient(135deg, #fff9e6, white);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    border-top: 3px solid var(--warning-color);
+    text-align: center;
+}
+
+.weather-card h3 {
+    color: var(--dark-color);
+    margin-bottom: 1rem;
+}
+
+.weather-card p {
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.impact-low {
+    background-color: var(--success-color);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.impact-medium {
+    background-color: var(--warning-color);
+    color: #333;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+/* ===== LOUNGES SECTION ===== */
+.lounges {
+    background: white;
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 3rem;
+}
+
+.lounges h2 {
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+}
+
+.lounge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.lounge-card {
+    background: linear-gradient(135deg, #f3e5f5, white);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    border-left: 5px solid #9c27b0;
+    box-shadow: 0 2px 8px rgba(156, 39, 176, 0.1);
+}
+
+.lounge-card h3 {
+    color: #7b1fa2;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.lounge-card p {
+    color: #555;
+    margin-bottom: 0.75rem;
+}
+
+/* ===== ALERTS SECTION ===== */
+.alerts {
+    background: white;
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 3rem;
+}
+
+.alerts h2 {
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
+
+.alerts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.alert {
+    padding: 1rem 1.5rem;
+    border-left: 5px solid #999;
+    border-radius: var(--border-radius);
+}
+
+.alert p {
+    color: #333;
+    margin: 0;
+}
+
+.alert-info {
+    background-color: #e3f2fd;
+    border-left-color: var(--primary-color);
+}
+
+.alert-warning {
+    background-color: #fff3e0;
+    border-left-color: var(--warning-color);
+}
+
+.alert-success {
+    background-color: #e8f5e9;
+    border-left-color: var(--success-color);
+}
+
+/* ===== FOOTER INFO SECTION ===== */
+.footer-info {
+    background: var(--light-color);
+    padding: 3rem 2rem;
+    margin-bottom: 2rem;
+    border-radius: var(--border-radius);
+}
+
+.footer-info h2 {
+    text-align: center;
+    color: var(--dark-color);
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-card {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.footer-card h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.footer-card p {
+    color: #666;
+    margin-bottom: 0.5rem;
+    line-height: 1.7;
+}
+
+.footer-card a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.footer-card a:hover {
+    color: var(--secondary-color);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .airport-main h1 {
+        font-size: 1.8rem;
+    }
+
+    .search-container {
+        flex-direction: column;
+    }
+
+    .search-input {
+        min-width: auto;
+    }
+
+    .board-container {
+        grid-template-columns: 1fr;
+    }
+
+    .flight-table {
+        font-size: 0.8rem;
+    }
+
+    .flight-table th,
+    .flight-table td {
+        padding: 0.5rem;
+    }
+
+    .status-cards,
+    .facilities-grid,
+    .health-services,
+    .transport-grid,
+    .weather-cards,
+    .lounge-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .map-container {
+        height: 300px;
+    }
+
+    .airport-search,
+    .airport-status,
+    .flight-boards,
+    .facilities,
+    .health-support,
+    .terminal-map,
+    .transportation,
+    .weather,
+    .lounges,
+    .alerts,
+    .footer-info {
+        padding: 1.5rem;
+    }
+}
