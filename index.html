@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mitochondria Corporation | Mitochondria Digital Millennium Services</title>
+  <meta name="description" content="PC Building, Affiliate Marketing, Tech News & Digital Services" />
+
+  <!-- Bootstrap 5 + Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --primary: #ffd000;
+      --dark-bg: #1a1a1a;
+      --dark-text: #e0e0e0;
+      --light-bg: #f8f9fa;
+    }
+    body { 
+      transition: background-color 0.4s, color 0.4s; 
+      font-family: 'Segoe UI', sans-serif; 
+    }
+    .dark-mode { 
+      background-color: var(--dark-bg) !important; 
+      color: var(--dark-text) !important; 
+    }
+    .dark-mode .bg-light { background-color: #2c2c2c !important; }
+    .dark-mode .card, .dark-mode .navbar { background-color: #2c2c2c !important; border-color: #444; }
+    .dark-mode .text-muted { color: #aaa !important; }
+
+    #main-slider .carousel-caption {
+      background: rgba(0,0,0,0.6);
+      border-radius: 12px;
+      padding: 15px 25px;
+      bottom: 15%;
+      left: 5% !important;
+      right: 5% !important;
+      text-align: center;
+    }
+    #main-slider h3 { font-size: clamp(1.5rem, 5vw, 3rem); margin-bottom: 10px; }
+    #main-slider p { font-size: clamp(1rem, 3vw, 1.5rem); }
+
+    .quick-gadgets {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 15px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .quick-gadgets .btn { margin: 8px; }
+
+    .floating-controls {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .floating-controls button {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: none;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      font-size: 1.2rem;
+    }
+
+    /* Footer Hover Glow Effect */
+    .hover-glow {
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .hover-glow:hover {
+      color: var(--primary) !important;
+      text-shadow: 0 0 15px rgba(255, 209, 0, 0.8);
+      transform: translateY(-3px);
+    }
+    .scrollup {
+      transition: all 0.4s ease;
+    }
+    .scrollup:hover {
+      background: var(--primary) !important;
+      color: #000 !important;
+      transform: translateY(-6px);
+      box-shadow: 0 12px 25px rgba(255, 209, 0, 0.5);
+    }
+
+    /* ───────────────────────────────────────────────
+       Scroll Animation Additions (Modern & Smooth)
+    ──────────────────────────────────────────────── */
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(60px) scale(0.96);
+      transition: opacity 0.1s ease; /* prevent flash */
+    }
+
+    .card.animate-on-scroll,
+    .section-animate {
+      opacity: 0;
+      transform: translateX(-60px) scale(0.97);
+      will-change: transform, opacity;
+    }
+
+    .card.animate-on-scroll:nth-child(even) {
+      transform: translateX(60px) scale(0.97);
+    }
+
+    .about-section.animate-on-scroll {
+      opacity: 0;
+      transform: translateY(80px);
+    }
+
+    .quick-gadgets.animate-on-scroll {
+      opacity: 0;
+      transform: scale(0.92);
+    }
+
+    .testimonial-section {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+  <!-- Floating Control Buttons -->
+  <div class="floating-controls">
+    <button id="darkModeToggle" class="btn btn-warning" title="Dark Mode"><i class="fas fa-moon"></i></button>
+    <button id="printBtn" class="btn btn-info text-white" title="Print"><i class="fas fa-print"></i></button>
+    <button id="shareBtn" class="btn btn-success" title="Share"><i class="fas fa-share-alt"></i></button>
+    <button id="langBtn" class="btn btn-primary" title="Language">EN</button>
+    <button id="narratorBtn" class="btn btn-danger" title="Read Aloud"><i class="fas fa-volume-up"></i></button>
+  </div>
+
+  <!-- Header -->
+  <header class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="img/logo.png" alt="logo" height="40">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="Portfolio mitochodria 2nd part.html">Tech-NEWS ROOM</a></li>
+          <li class="nav-item"><a class="nav-link" href="portfolio.html">Our Gallery</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Join our Community</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Slider (no animation needed - it's already visible) -->
+  <div id="main-slider" class="carousel slide carousel-fade" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="img/slides/1.jpg" class="d-block w-100" alt="PC Builds">
+        <div class="carousel-caption">
+          <h3>Mitochondria Digital Millennium Services</h3>
+          <p>Tailored Innovation builds for creators, Developers, and businesses.</p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="img/slides/2.jpg" class="d-block w-100" alt="Affiliate">
+        <div class="carousel-caption">
+          <h3>Affiliate Marketing & Online Business</h3>
+          <p>Transparent partnerships with global vendors.</p>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#main-slider" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#main-slider" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </button>
+  </div>
+
+  <!-- Services Section – animate cards -->
+  <section class="container my-5">
+    <div class="row text-center g-4">
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm animate-on-scroll">
+          <img src="img/slides/2.jpg" class="card-img-top" alt="Shopping">
+          <div class="card-body">
+            <h3>Way to Shopping</h3>
+            <p>Discover top products from trusted online stores, with clear and essential details to help you buy smarter.!</p>
+            <a href="nandha.html" class="btn btn-outline-primary">EXPLORE & BUY</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm animate-on-scroll">
+          <img src="img/slides/22.jpg" class="card-img-top" alt="Workshop">
+          <div class="card-body">
+            <h3>Way to PC Workshop</h3>
+            <p>Exclusive custom PC building & repair services.</p>
+            <a href="Mitochondria service and solutions.html" class="btn btn-outline-primary">GET SOLUTIONS</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm animate-on-scroll">
+          <img src="img/service3.jpg" class="card-img-top" alt="News">
+          <div class="card-body">
+            <h3>Meet our Aviation Service</h3>
+            <p>Delivering real-time aviation insights with integrated health monitoring and accessible travel management!.</p>
+           <a href="AVIATIO AND Management/Aviation INDEX MAIN.html" class="btn btn-outline-primary">Get your Seat ! </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Actions -->
+  <section class="container">
+    <div class="quick-gadgets text-center animate-on-scroll">
+      <h2 class="mb-4">Quick Actions</h2>
+      <div class="d-flex flex-wrap justify-content-center gap-3">
+        <button class="btn btn-light btn-lg" onclick="alert('Opening Affiliate Store...')"><i class="fas fa-shopping-cart"></i> Shop Now</button>
+        <button class="btn btn-light btn-lg" onclick="location.href='contact.html'"><i class="fas fa-wrench"></i> Book PC Build</button>
+        <button class="btn btn-light btn-lg" onclick="location.href='Portfolio mitochodria 2nd part.html'"><i class="fas fa-newspaper"></i> Latest News</button>
+        <button class="btn btn-light btn-lg" onclick="scrollToSection('contact')"><i class="fas fa-envelope"></i> Contact Us</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="container my-5 about-section animate-on-scroll">
+    <div class="row align-items-center">
+      <div class="col-md-4 text-center">
+        <img src="img/people.png" class="img-fluid rounded" alt="Team">
+      </div>
+      <div class="col-md-8">
+        <h1>Mitochondria <span class="text-primary">Digital Millennium Services</span></h1>
+        <p>Founded in 2023, Mitochondria is a rising digital enterprise born from a young innovator’s vision — to merge hardware engineering, affiliate technology, and global online services into a single, living ecosystem.</p>
+        <p>We’re not just a company; we’re a growing network of thinkers and builders creating a more connected, efficient, and transparent tech economy </p><br>
+        <p>- NANDHA VISHNU Founder of Mitochondria Digital Millennium Services </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="bg-dark text-white py-5 testimonial-section">
+    <div class="container">
+      <div id="testimonialCarousel" class="carousel slide">
+        <div class="carousel-inner text-center">
+          <div class="carousel-item active">
+            <p class="lead">"It's fine to celebrate success, but it is more important to heed the lessons of failure."</p>
+            <p><strong>— Bill Gates, Co-Founder of Microsoft</strong></p>
+          </div>
+          <div class="carousel-item">
+            <p class="lead">"Innovation distinguishes between a leader and a follower."</p>
+            <p><strong>— Steve Jobs, Former CEO of Apple</strong></p>
+          </div>
+          <div class="carousel-item">
+            <p class="lead">"I believe you have to be willing to be misunderstood if you're going to innovate."</p>
+            <p><strong>— Jeff Bezos, Founder of Amazon</strong></p>
+          </div>
+          <div class="carousel-item">
+            <p class="lead">"It takes 20 years to build a reputation and five minutes to ruin it."</p>
+            <p><strong>— Warren Buffett, CEO of Berkshire Hathaway</strong></p>
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon"></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODERN GLOWING FOOTER (FULLY INTEGRATED) -->
+  <footer class="bg-dark text-white py-5 mt-5">
+    <div class="container">
+      <div class="row g-5">
+
+        <!-- Column 1: Get in Touch -->
+        <div class="col-lg-3 col-md-6">
+          <h5 class="mb-4 text-warning fw-bold">Get in Touch</h5>
+          <p class="mb-3">
+            <strong>Mitochondria digital Millennium services</strong><br>
+            <small class="text-muted">---</small>Site & Locality : Palayampatti Aruppukottai<br>
+            <small class="text-muted">---</small> 
+            <a href="http://vhnsnc.edu.in/index.php" class="text-white text-decoration-underline hover-glow" target="_blank">
+              <b>Hosted & Developed on<br>: Central Library of VHNSN college</b></br>
+            </a>
+          </p>
+          <p class="mb-0">
+            <i class="fas fa-phone-alt me-2 text-warning"></i> +91 95975 63183<br>
+            <i class="fas fa-envelope me-2 text-warning"></i> 
+            <a href="mailto:Mitochondriadigitalservices@gmail.com" class="text-white hover-glow">
+              Mitochondriadigitalservices@gmail.com
+            </a>
+          </p>
+        </div>
+
+        <!-- Column 2: Quick Links -->
+        <div class="col-lg-3 col-md-6">
+          <h5 class="mb-4 text-warning fw-bold">Quick Links</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="https://drive.google.com/file/d/11VTXW3D7GXa2IR34xovytb__pcg8SPvp/view?usp=drive_link" class="text-white hover-glow"><i class="fas fa-angle-right me-2"></i>Terms & Conditions</a></li>
+            <li class="mb-2"><a href="https://drive.google.com/file/d/11VTXW3D7GXa2IR34xovytb__pcg8SPvp/view?usp=drive_link" class="text-white hover-glow"><i class="fas fa-angle-right me-2"></i>Disclaimer</a></li>
+            <li class="mb-2"><a href="https://drive.google.com/file/d/11VTXW3D7GXa2IR34xovytb__pcg8SPvp/view?usp=drive_link" class="text-white hover-glow"><i class="fas fa-angle-right me-2"></i>Affiliate Online Business Policy</a></li>
+            <li class="mb-2"><a href="https://docs.google.com/forms/d/e/1FAIpQLScPHe5qM2wbVKaUEHQ8U-kWh3mfHVMLL3B6BBTIasX5ltqusQ/viewform?usp=header" class="text-white hover-glow"><i class="fas fa-angle-right me-2"></i>Feedback</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: News & Insights -->
+        <div class="col-lg-3 col-md-6">
+          <h5 class="mb-4 text-warning fw-bold">News, Economics & Business</h5>
+          <ul class="list-unstyled small">
+            <li class="mb-2"><a href="https://mitochondriadigitalmilleniumservices.blogspot.com/2025/10/0-todays-us-economic-highlights-wsj.html" class="text-white hover-glow">Today's US Economic Highlights (Oct 9, 2025)</a></li>
+            <li class="mb-2"><a href="https://mitochondriadigitalmilleniumservices.blogspot.com/2025/10/todays-tech-highlights-october-9-2025.html" class="text-white hover-glow">NVIDIA, SpaceX, Oracle & more...</a></li>
+            <li class="mb-2"><a href="https://mitochondriadigitalmilleniumservices.blogspot.com/p/your-inner-inventor-fresh-diy.html" class="text-white hover-glow">Fresh DIY Electrical Sparks – Oct 2025</a></li>
+            <li class="mb-2"><a href="https://drive.google.com/file/d/1b85kGOVqdm-Ptr5RhBb36RgDT6z_K9oK/view?usp=sharing" class="text-white hover-glow">Mitochondria Internet Archives</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 4: Our Channels + Social -->
+        <div class="col-lg-3 col-md-6">
+          <h5 class="mb-4 text-warning fw-bold">Visit Our Channels</h5>
+          <ul class="list-unstyled">
+            <li class="mb-3">
+              <a href="https://youtube.com/@techfjordchannel?si=twpivogapypm_ZCY" class="text-white hover-glow d-block">
+                <i class="fab fa-youtube text-danger me-2"></i> Tech-Fjord Channel
+              </a>
+            </li>
+            <li class="mb-3">
+              <a href="https://youtube.com/@mr.manmithvlogs4324?si=uNFMaocArp3ZjONb" class="text-white hover-glow d-block">
+                <i class="fab fa-youtube text-danger me-2"></i> Mr.Manmith Vlogs
+              </a>
+            </li>
+          </ul>
+
+          <div class="mt-4">
+            <h6 class="text-warning mb-3">Follow Us</h6>
+            <a href="#" class="text-white me-3 fs-4 hover-glow"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="text-white me-3 fs-4 hover-glow"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-white me-3 fs-4 hover-glow"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="text-white me-3 fs-4 hover-glow"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-white fs-4 hover-glow"><i class="fab fa-pinterest"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <hr class="my-5 border-secondary">
+
+      <!-- Sub Footer -->
+      <div class="row align-items-center">
+        <div class="col-md-6 text-center text-md-start">
+          <p class="mb-0 small">
+            © 2026 <strong>Mitochondria Corporation</strong> ALL RIGHTS RESERVED includes LOGO and Branding names.<br>
+            Powered by <a href="https://drive.google.com/file/d/1LnOBGp3FzNR6ulYiUOwB15M2O8BoSBk2/view?usp=drive_link" target="_blank" class="text-warning hover-glow text-decoration-underline">Mitochondria Digital Millennium Services</a>
+          </p>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+          <a href="#" class="btn btn-outline-warning btn-sm rounded-pill px-4 scrollup">
+            Back to Top
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap + Motion One + Custom Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Motion One (lightweight & modern animation library) -->
+  <script type="module">
+    import { animate, inView } from "https://cdn.jsdelivr.net/npm/motion@12.29.2/+esm"
+
+    // Services cards – slide from sides alternately
+    inView(".card.animate-on-scroll", (element) => {
+      animate(
+        element,
+        { opacity: 1, x: 0, scale: 1 },
+        { duration: 0.8, easing: [0.17, 0.55, 0.55, 1] }
+      )
+      return () => animate(element, { opacity: 0, x: element.getBoundingClientRect().left < window.innerWidth / 2 ? -60 : 60 })
+    }, { margin: "-100px" })
+
+    // Quick Actions section – subtle scale + fade
+    inView(".quick-gadgets.animate-on-scroll", (element) => {
+      animate(element, { opacity: 1, scale: 1, y: 0 }, { duration: 0.9, easing: "easeOut" })
+    }, { margin: "-80px" })
+
+    // About section – slide up stronger
+    inView(".about-section.animate-on-scroll", (element) => {
+      animate(element, { opacity: 1, y: 0 }, { duration: 1, easing: [0.16, 1, 0.3, 1] })
+    }, { margin: "-120px" })
+
+    // Testimonials section – gentle fade + lift
+    inView(".testimonial-section", (element) => {
+      animate(element, { opacity: 1, y: 0 }, { duration: 1.1, delay: 0.2, easing: "easeOut" })
+    }, { margin: "-150px" })
+
+    // Optional: animate footer columns on scroll (subtle)
+    inView("footer .col-lg-3", (element) => {
+      animate(element, { opacity: 1, y: [30, 0] }, { duration: 0.7, delay: Math.random() * 0.3 })
+    }, { margin: "-200px", once: true })
+  </script>
+
+  <script>
+    // Your original scripts remain unchanged
+    document.getElementById('darkModeToggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const icon = document.querySelector('#darkModeToggle i');
+      icon.classList.toggle('fa-moon');
+      icon.classList.toggle('fa-sun');
+    });
+
+    document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+    document.getElementById('shareBtn').addEventListener('click', async () => {
+      if (navigator.share) {
+        try { await navigator.share({ title: document.title, url: window.location.href }); }
+        catch(err) { alert('Sharing canceled'); }
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert('Link copied to clipboard!');
+      }
+    });
+
+    document.getElementById('langBtn').addEventListener('click', function() {
+      this.textContent = this.textContent === 'EN' ? 'TA' : 'EN';
+    });
+
+    let utterance;
+    document.getElementById('narratorBtn').addEventListener('click', () => {
+      if ('speechSynthesis' in window) {
+        if (speechSynthesis.speaking) {
+          speechSynthesis.cancel();
+        } else {
+          const text = document.body.innerText;
+          utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = 'en-US';
+          utterance.rate = 0.9;
+          speechSynthesis.speak(utterance);
+        }
+      }
+    });
+
+    document.querySelector('.scrollup').addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // If you have scrollToSection function defined elsewhere, keep it
+    function scrollToSection(id) {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Mitochondria DMS - Real-time Aviation Management & Health Services Portal">
+    <meta name="keywords" content="aviation, airports, flights, health services, real-time tracking">
+    <title>Mitochondria DMS - Aviation Management & Health Services Portal</title>
+
+    <!-- External Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+
+    <style>
+        /* ===== CSS VARIABLES & THEMING ===== */
+        :root {
+            --primary: #00d4ff;
+            --primary-dark: #0099cc;
+            --primary-light: #33e1ff;
+            --accent: #00ff9d;
+            --accent-dark: #00cc7f;
+            --accent-light: #66ffb3;
+            --danger: #ff4757;
+            --warning: #ffc107;
+            --success: #2ed573;
+            --info: #4dabf7;
+            
+            --bg-dark: #0a0f1e;
+            --bg-darker: #050a15;
+            --bg-card: rgba(20, 35, 80, 0.45);
+            --bg-card-dark: rgba(10, 20, 50, 0.6);
+            
+            --text-primary: #e0f0ff;
+            --text-secondary: #a0c0e0;
+            --text-light: #70a0d0;
+            
+            --border-color: rgba(0, 212, 255, 0.18);
+            --border-light: rgba(0, 212, 255, 0.08);
+            
+            --shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 12px 40px rgba(0, 0, 0, 0.6);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.8);
+            
+            --glow-primary: 0 0 20px rgba(0, 212, 255, 0.4);
+            --glow-accent: 0 0 15px rgba(0, 255, 157, 0.3);
+            --glow-danger: 0 0 20px rgba(255, 71, 87, 0.3);
+            
+            --radius-sm: 12px;
+            --radius-md: 20px;
+            --radius-lg: 30px;
+            
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --transition-smooth: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* ===== RESET & GLOBAL STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-light);
+            box-shadow: var(--glow-primary);
+        }
+
+        /* ===== NAVIGATION ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            background: rgba(10, 15, 30, 0.7);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-normal);
+        }
+
+        .navbar.scrolled {
+            background: rgba(5, 10, 20, 0.85);
+            padding: 0.8rem 0;
+            box-shadow: var(--shadow-lg), var(--glow-primary);
+        }
+
+        .nav-container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .logo-text h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            position: relative;
+            transition: all var(--transition-normal);
+            padding: 0.5rem 0;
+        }
+
+        .nav-menu a::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            bottom: -5px;
+            left: 0;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: width var(--transition-smooth);
+            box-shadow: var(--glow-primary);
+        }
+
+        .nav-menu a:hover::before,
+        .nav-menu a.active::before {
+            width: 100%;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary);
+            text-shadow: var(--glow-primary);
+            transform: translateY(-2px);
+        }
+
+        .theme-toggle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 157, 0.1));
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            transition: all var(--transition-normal);
+            color: var(--primary);
+        }
+
+        .theme-toggle:hover {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 157, 0.2));
+            box-shadow: var(--glow-primary);
+            transform: rotate(20deg) scale(1.1);
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { box-shadow: var(--glow-primary); }
+            50% { box-shadow: var(--glow-primary), 0 0 40px rgba(0, 212, 255, 0.6); }
+        }
+
+        @keyframes slide-in-down {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slide-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scale-in {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        main {
+            margin-top: 70px;
+            min-height: 100vh;
+        }
+
+        section {
+            padding: 5rem 2rem;
+            max-width: 1800px;
+            margin: 0 auto;
+            animation: fade-in 0.8s ease;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05) 0%, rgba(0, 255, 157, 0.05) 100%);
+            padding: 8rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 255, 157, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            animation: slide-in-up 0.8s ease;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 50%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -2px;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 1.2rem 2.5rem;
+            border-radius: var(--radius-lg);
+            border: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all var(--transition-smooth);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: var(--bg-dark);
+            box-shadow: var(--glow-primary), var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: var(--glow-primary), 0 0 40px rgba(0, 212, 255, 0.6), var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            box-shadow: inset var(--glow-primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 212, 255, 0.1);
+            transform: translateY(-4px);
+            box-shadow: var(--glow-primary), var(--shadow-md);
+        }
+
+        /* ===== SECTION HEADERS ===== */
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: slide-in-up 0.6s ease;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2rem, 5vw, 4rem);
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 5px;
+            box-shadow: var(--glow-primary);
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-top: 1rem;
+        }
+
+        /* ===== SEARCH SECTION ===== */
+        .search-section {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 3rem;
+            margin-bottom: 4rem;
+            box-shadow: var(--shadow-md);
+            animation: scale-in 0.6s ease;
+        }
+
+        .search-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+        }
+
+        .search-input-wrapper label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .search-input, .search-select {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all var(--transition-normal);
+            backdrop-filter: blur(10px);
+        }
+
+        .search-input:focus, .search-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(0, 212, 255, 0.08);
+            box-shadow: var(--glow-primary);
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-search {
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: var(--bg-dark);
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-smooth);
+            box-shadow: var(--glow-primary), var(--shadow-md);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            align-self: flex-end;
+        }
+
+        .btn-search:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: var(--glow-primary), 0 0 40px rgba(0, 212, 255, 0.6), var(--shadow-lg);
+        }
+
+        /* ===== GRID CARDS ===== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            animation: fade-in 0.8s ease;
+        }
+
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            transition: all var(--transition-smooth);
+            overflow: hidden;
+            position: relative;
+            box-shadow: var(--shadow-md);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+            transition: left var(--transition-smooth);
+            z-index: 0;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-15px) scale(1.03);
+            border-color: var(--primary);
+            box-shadow: var(--glow-primary), var(--shadow-lg);
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .card h3 {
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 0.8rem;
+        }
+
+        .card-meta {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-light);
+        }
+
+        /* ===== FLIGHT BOARDS ===== */
+        .flight-boards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2rem;
+        }
+
+        .board {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            animation: slide-in-up 0.8s ease;
+        }
+
+        .board-header {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 157, 0.1));
+            padding: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .board-header h3 {
+            font-size: 1.6rem;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .flight-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .flight-table thead {
+            background: rgba(0, 212, 255, 0.08);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .flight-table th {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            color: var(--primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        .flight-table td {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-secondary);
+        }
+
+        .flight-table tbody tr {
+            transition: all var(--transition-normal);
+        }
+
+        .flight-table tbody tr:hover {
+            background: rgba(0, 212, 255, 0.08);
+            box-shadow: inset 0 0 20px rgba(0, 212, 255, 0.1);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-on-time {
+            background: rgba(46, 213, 115, 0.2);
+            color: var(--success);
+        }
+
+        .status-boarding {
+            background: rgba(255, 199, 7, 0.2);
+            color: var(--warning);
+        }
+
+        .status-delayed {
+            background: rgba(255, 71, 87, 0.2);
+            color: var(--danger);
+        }
+
+        .status-landed {
+            background: rgba(77, 171, 247, 0.2);
+            color: var(--info);
+        }
+
+        /* ===== MAP SECTION ===== */
+        .map-section {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            padding: 2rem;
+            animation: scale-in 0.8s ease;
+        }
+
+        #map {
+            width: 100%;
+            height: 500px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+        }
+
+        .map-legend {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(0, 212, 255, 0.05);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-light);
+        }
+
+        .map-legend-item {
+            display: inline-block;
+            margin-right: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* ===== STATS SECTION ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            text-align: center;
+            transition: all var(--transition-smooth);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: var(--glow-primary), var(--shadow-lg);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ===== WEATHER CARDS ===== */
+        .weather-card {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 157, 77, 0.1));
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .weather-card:hover {
+            border-color: var(--warning);
+            box-shadow: 0 0 20px rgba(255, 193, 7, 0.3), var(--shadow-md);
+        }
+
+        /* ===== HEALTH CARDS ===== */
+        .health-card {
+            background: linear-gradient(135deg, rgba(255, 71, 87, 0.1), rgba(255, 109, 125, 0.1));
+            border: 1px solid rgba(255, 71, 87, 0.3);
+        }
+
+        .health-card:hover {
+            border-color: var(--danger);
+            box-shadow: 0 0 20px rgba(255, 71, 87, 0.3), var(--shadow-md);
+        }
+
+        /* ===== FACILITY CARDS ===== */
+        .facility-card {
+            background: linear-gradient(135deg, rgba(0, 255, 157, 0.1), rgba(77, 171, 247, 0.1));
+            border: 1px solid rgba(0, 255, 157, 0.3);
+        }
+
+        .facility-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(0, 255, 157, 0.3), var(--shadow-md);
+        }
+
+        /* ===== TRANSPORT CARDS ===== */
+        .transport-card {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 157, 0.1));
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .transport-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--glow-primary), var(--shadow-md);
+        }
+
+        /* ===== ALERT SECTION ===== */
+        .alerts-section {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .alert-item {
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 1.2rem;
+            border-left: 5px solid;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            transition: all var(--transition-normal);
+        }
+
+        .alert-item:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .alert-info {
+            border-left-color: var(--info);
+            background: rgba(77, 171, 247, 0.08);
+        }
+
+        .alert-warning {
+            border-left-color: var(--warning);
+            background: rgba(255, 193, 7, 0.08);
+        }
+
+        .alert-success {
+            border-left-color: var(--success);
+            background: rgba(46, 213, 115, 0.08);
+        }
+
+        .alert-item strong {
+            color: var(--text-primary);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: rgba(5, 10, 20, 0.9);
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+
+        .footer-grid {
+            max-width: 1800px;
+            margin: 0 auto 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all var(--transition-normal);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border-light);
+            padding-top: 2rem;
+            color: var(--text-light);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 1024px) {
+            section {
+                padding: 3.5rem 1.5rem;
+            }
+
+            .nav-container {
+                padding: 0 1.5rem;
+            }
+
+            .nav-menu {
+                gap: 2rem;
+                font-size: 0.95rem;
+            }
+
+            .flight-boards {
+                grid-template-columns: 1fr;
+            }
+
+            .cards-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                gap: 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .logo-text h1 {
+                font-size: 1.4rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .cta-group {
+                flex-direction: column;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+            }
+
+            .search-container {
+                grid-template-columns: 1fr;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .flight-table th, .flight-table td {
+                padding: 0.8rem;
+                font-size: 0.85rem;
+            }
+
+            #map {
+                height: 300px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 0.8rem 0;
+            }
+
+            .nav-container {
+                height: auto;
+                gap: 1rem;
+            }
+
+            .nav-menu {
+                gap: 1rem;
+                font-size: 0.8rem;
+            }
+
+            .logo-text h1 {
+                font-size: 1.2rem;
+            }
+
+            .hero {
+                padding: 4rem 1rem;
+            }
+
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            section {
+                padding: 2.5rem 1rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.6rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== UTILITY CLASSES ===== */
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-between {
+            justify-content: space-between;
+        }
+
+        .flex-center {
+            justify-content: center;
+            align-items: center;
+        }
+
+        .grid {
+            display: grid;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-primary {
+            color: var(--primary);
+        }
+
+        .text-accent {
+            color: var(--accent);
+        }
+
+        .mb-1 { margin-bottom: 1rem; }
+        .mb-2 { margin-bottom: 2rem; }
+        .mb-3 { margin-bottom: 3rem; }
+
+        .mt-1 { margin-top: 1rem; }
+        .mt-2 { margin-top: 2rem; }
+        .mt-3 { margin-top: 3rem; }
+
+        .hidden {
+            display: none;
+        }
+
+        .visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== NAVIGATION ===== -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">🛫</div>
+                <div class="logo-text">
+                    <h1>Mitochondria DMS</h1>
+                    <p>Aviation Management System</p>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#airports" class="nav-link">Airports</a></li>
+                <li><a href="#flights" class="nav-link">Flights</a></li>
+                <li><a href="#health" class="nav-link">Health</a></li>
+                <li><a href="#transport" class="nav-link">Transport</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main>
+        <!-- ===== HERO SECTION ===== -->
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <h1>🌍 Real-Time Aviation Management Portal</h1>
+                <p>Integrated airport operations, flight tracking, and health services in one powerful platform</p>
+                <div class="cta-group">
+                    <button class="btn-primary" onclick="scrollToSection('airports')">
+                        <i class="fas fa-search"></i> Search Airports
+                    </button>
+                    <button class="btn-secondary" onclick="scrollToSection('flights')">
+                        <i class="fas fa-plane"></i> Track Flights
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== AIRPORT SEARCH SECTION ===== -->
+        <section id="airports">
+            <div class="section-header">
+                <h2><i class="fas fa-airport"></i> Airport Information Control Center</h2>
+                <p>Search, monitor, and manage airport operations worldwide</p>
+            </div>
+
+            <!-- Search Form -->
+            <div class="search-section">
+                <div class="search-container">
+                    <div class="search-input-wrapper">
+                        <label>Airport Name or Code</label>
+                        <input type="text" id="airportSearch" class="search-input" placeholder="e.g., DEL, DXB, JFK">
+                    </div>
+                    <div class="search-input-wrapper">
+                        <label>Select Country</label>
+                        <select id="countryFilter" class="search-select">
+                            <option value="">All Countries</option>
+                            <option value="India">India</option>
+                            <option value="UAE">UAE</option>
+                            <option value="USA">USA</option>
+                            <option value="UK">UK</option>
+                        </select>
+                    </div>
+                    <button class="btn-search" onclick="searchAirports()">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+                <div id="searchResults"></div>
+            </div>
+
+            <!-- Airport Status Cards -->
+            <div class="section-header">
+                <h2>📊 Live Airport Operations Status</h2>
+            </div>
+            <div class="cards-grid" id="airportStatusCards">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- ===== FLIGHT TRACKING SECTION ===== -->
+        <section id="flights">
+            <div class="section-header">
+                <h2><i class="fas fa-plane-departure"></i> Real-Time Flight Tracking</h2>
+                <p>Live departure and arrival information with status updates</p>
+            </div>
+
+            <div class="flight-boards">
+                <!-- Departure Board -->
+                <div class="board">
+                    <div class="board-header">
+                        <h3><i class="fas fa-plane-departure"></i> Departures</h3>
+                    </div>
+                    <table class="flight-table">
+                        <thead>
+                            <tr>
+                                <th>Flight</th>
+                                <th>Destination</th>
+                                <th>Time</th>
+                                <th>Gate</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="departureBoard">
+                            <!-- Dynamically populated -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Arrival Board -->
+                <div class="board">
+                    <div class="board-header">
+                        <h3><i class="fas fa-plane-arrival"></i> Arrivals</h3>
+                    </div>
+                    <table class="flight-table">
+                        <thead>
+                            <tr>
+                                <th>Flight</th>
+                                <th>Origin</th>
+                                <th>Time</th>
+                                <th>Gate</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="arrivalBoard">
+                            <!-- Dynamically populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Flight Stats -->
+            <div class="stats-grid mt-3">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalFlights">42</div>
+                    <div class="stat-label">Active Flights</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="onTimeFlights">38</div>
+                    <div class="stat-label">On Time</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="delayedFlights">4</div>
+                    <div class="stat-label">Delayed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="avgDelay">8</div>
+                    <div class="stat-label">Avg Delay (min)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== HEALTH SERVICES SECTION ===== -->
+        <section id="health">
+            <div class="section-header">
+                <h2><i class="fas fa-heartbeat"></i> Airport Health & Medical Services</h2>
+                <p>24/7 medical support and emergency services at every airport</p>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card health-card">
+                    <div class="card-content">
+                        <div class="card-icon">🏥</div>
+                        <h3>Medical Clinic</h3>
+                        <p>24/7 medical facility with experienced doctors</p>
+                        <p><strong>Services:</strong> General consultation, first aid, medication</p>
+                        <div class="card-meta">
+                            <strong>Contact:</strong> +91-XXXXX-XXXXX
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card health-card">
+                    <div class="card-content">
+                        <div class="card-icon">🚑</div>
+                        <h3>Emergency Response</h3>
+                        <p>Rapid response teams standing by 24/7</p>
+                        <p><strong>Response Time:</strong> &lt;5 minutes</p>
+                        <div class="card-meta">
+                            <strong>Equipment:</strong> AED, Defibrillator, Stretcher
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card health-card">
+                    <div class="card-content">
+                        <div class="card-icon">💨</div>
+                        <h3>Oxygen Support</h3>
+                        <p>Emergency oxygen available at all gates</p>
+                        <p><strong>Cylinders:</strong> Available for rent (short flights)</p>
+                        <div class="card-meta">
+                            <strong>Pre-booking:</strong> 48 hours advance notice
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card health-card">
+                    <div class="card-content">
+                        <div class="card-icon">🛏️</div>
+                        <h3>Isolation Rooms</h3>
+                        <p>Secure isolation facility for quarantine</p>
+                        <p><strong>Capacity:</strong> 5 isolation rooms</p>
+                        <div class="card-meta">
+                            <strong>Features:</strong> Medical monitoring, HEPA filtration
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card health-card">
+                    <div class="card-content">
+                        <div class="card-icon">🩺</div>
+                        <h3>Health Screening</h3>
+                        <p>Rapid health assessment and screening</p>
+                        <p><strong>Technology:</strong> Thermal imaging, quick assessment</p>
+                        <div class="card-meta">
+                            <strong>Cost:</strong> FREE at entry/exit
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card health-card">
+                    <div class="card-content">
+                        <div class="card-icon">👨‍⚕️</div>
+                        <h3>Specialized Support</h3>
+                        <p>Expert care for specific medical conditions</p>
+                        <p><strong>Specialties:</strong> Cardiology, Respiratory, Mobility</p>
+                        <div class="card-meta">
+                            <strong>Available:</strong> 24 hours daily
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== FACILITIES & ACCESSIBILITY ===== -->
+        <section>
+            <div class="section-header">
+                <h2><i class="fas fa-accessible-icon"></i> Passenger Facilities & Accessibility</h2>
+                <p>Complete support services for all travelers</p>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card facility-card">
+                    <div class="card-content">
+                        <div class="card-icon">♿</div>
+                        <h3>Wheelchair Assistance</h3>
+                        <p>Available at gates, counters, and throughout terminals</p>
+                        <div class="card-meta">
+                            <strong>Contact:</strong> +91-XXXXX-XXXXX
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card facility-card">
+                    <div class="card-content">
+                        <div class="card-icon">🍽️</div>
+                        <h3>Dietary Services</h3>
+                        <p>Special meal options: vegan, gluten-free, religious</p>
+                        <div class="card-meta">
+                            <strong>Available:</strong> All restaurants & catering
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card facility-card">
+                    <div class="card-content">
+                        <div class="card-icon">🕌</div>
+                        <h3>Prayer Rooms</h3>
+                        <p>Multi-faith prayer spaces available</p>
+                        <div class="card-meta">
+                            <strong>Locations:</strong> Each terminal level
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card facility-card">
+                    <div class="card-content">
+                        <div class="card-icon">🛏️</div>
+                        <h3>Rest Areas</h3>
+                        <p>Comfortable lounges and sleeping pods</p>
+                        <div class="card-meta">
+                            <strong>Available:</strong> 24/7 access
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card facility-card">
+                    <div class="card-content">
+                        <div class="card-icon">🚻</div>
+                        <h3>Accessible Restrooms</h3>
+                        <p>Disabled-friendly facilities with assistance</p>
+                        <div class="card-meta">
+                            <strong>Locations:</strong> All terminals
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card facility-card">
+                    <div class="card-content">
+                        <div class="card-icon">🦻</div>
+                        <h3>Special Services</h3>
+                        <p>Assistance for mobility, hearing, visual impairment</p>
+                        <div class="card-meta">
+                            <strong>Available:</strong> 24 hours daily
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== AIRPORT TERMINAL MAP ===== -->
+        <section>
+            <div class="section-header">
+                <h2><i class="fas fa-map"></i> Airport Terminal Navigation Map</h2>
+                <p>Interactive map of terminal facilities and services</p>
+            </div>
+
+            <div class="map-section">
+                <div id="map"></div>
+                <div class="map-legend">
+                    <div class="map-legend-item">🔴 Gates</div>
+                    <div class="map-legend-item">🟢 Security</div>
+                    <div class="map-legend-item">🟡 Medical</div>
+                    <div class="map-legend-item">🟣 Restrooms</div>
+                    <div class="map-legend-item">🔵 Restaurants</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== GROUND TRANSPORTATION ===== -->
+        <section id="transport">
+            <div class="section-header">
+                <h2><i class="fas fa-car"></i> Ground Transportation Options</h2>
+                <p>Easy and convenient travel to/from airport</p>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card transport-card">
+                    <div class="card-content">
+                        <div class="card-icon">🚕</div>
+                        <h3>Taxi Services</h3>
+                        <p><strong>Fare:</strong> Meter-based</p>
+                        <p><strong>Stand:</strong> Terminal level (Arrivals)</p>
+                        <p><strong>Payment:</strong> Cash, Card, Mobile</p>
+                        <div class="card-meta">Avg Wait: 5-10 min</div>
+                    </div>
+                </div>
+
+                <div class="card transport-card">
+                    <div class="card-content">
+                        <div class="card-icon">🚇</div>
+                        <h3>Metro/Train</h3>
+                        <p><strong>Express Line:</strong> 23 min to city</p>
+                        <p><strong>Frequency:</strong> Every 15 min</p>
+                        <p><strong>Fare:</strong> ₹100-150</p>
+                        <div class="card-meta">Hours: 6 AM - 11 PM</div>
+                    </div>
+                </div>
+
+                <div class="card transport-card">
+                    <div class="card-content">
+                        <div class="card-icon">🚌</div>
+                        <h3>Bus Services</h3>
+                        <p><strong>Routes:</strong> City, intercity, state</p>
+                        <p><strong>Stand:</strong> Terminal 2 & 3</p>
+                        <p><strong>Frequency:</strong> Every 30 min</p>
+                        <div class="card-meta">Price: ₹50-500</div>
+                    </div>
+                </div>
+
+                <div class="card transport-card">
+                    <div class="card-content">
+                        <div class="card-icon">🚗</div>
+                        <h3>Car Rental</h3>
+                        <p><strong>Companies:</strong> Hertz, Avis, Budget</p>
+                        <p><strong>Counter:</strong> Terminal 2 & 3</p>
+                        <p><strong>Types:</strong> Economy, SUV, Luxury</p>
+                        <div class="card-meta">Pre-booking available</div>
+                    </div>
+                </div>
+
+                <div class="card transport-card">
+                    <div class="card-content">
+                        <div class="card-icon">🚖</div>
+                        <h3>Ride-sharing</h3>
+                        <p><strong>Apps:</strong> Uber, Ola, Rapido</p>
+                        <p><strong>Pickup:</strong> Level 2 (designated)</p>
+                        <p><strong>Fare:</strong> ₹400-800 to city</p>
+                        <div class="card-meta">Mobile app booking</div>
+                    </div>
+                </div>
+
+                <div class="card transport-card">
+                    <div class="card-content">
+                        <div class="card-icon">👥</div>
+                        <h3>Shared Shuttle</h3>
+                        <p><strong>Routes:</strong> Hotels, city centers</p>
+                        <p><strong>Capacity:</strong> 7-14 passengers</p>
+                        <p><strong>Cost:</strong> ₹200-400/person</p>
+                        <div class="card-meta">Info desk booking</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== WEATHER & CONDITIONS ===== -->
+        <section>
+            <div class="section-header">
+                <h2><i class="fas fa-cloud"></i> Airport Weather & Conditions</h2>
+                <p>Real-time weather updates and flight impact analysis</p>
+            </div>
+
+            <div class="cards-grid" id="weatherCards">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- ===== LOUNGE INFORMATION ===== -->
+        <section>
+            <div class="section-header">
+                <h2><i class="fas fa-chair"></i> Airport Lounges</h2>
+                <p>Premium lounge services and amenities</p>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-icon">✨</div>
+                        <h3>Sky Lounge Premium</h3>
+                        <p><strong>Location:</strong> Terminal 2, Level 3</p>
+                        <p><strong>Access:</strong> First/Business class</p>
+                        <p><strong>Services:</strong> Fine dining, shower, Wi-Fi, pods</p>
+                        <div class="card-meta">Hours: 5 AM - 11 PM</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-icon">🎯</div>
+                        <h3>Comfort Lounge</h3>
+                        <p><strong>Location:</strong> Terminal 3, Level 2</p>
+                        <p><strong>Access:</strong> Business class, Gold members</p>
+                        <p><strong>Services:</strong> Snacks, beverages, Wi-Fi, seating</p>
+                        <div class="card-meta">Hours: 6 AM - 10 PM</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-icon">⚡</div>
+                        <h3>Travel Lounge Express</h3>
+                        <p><strong>Location:</strong> All terminals</p>
+                        <p><strong>Access:</strong> Day pass (₹1000) or hourly (₹300)</p>
+                        <p><strong>Services:</strong> Refreshments, workstations, TV</p>
+                        <div class="card-meta">Hours: 24/7 Open</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== ALERTS & NOTIFICATIONS ===== -->
+        <section>
+            <div class="section-header">
+                <h2><i class="fas fa-bell"></i> System Alerts & Notifications</h2>
+                <p>Important updates and operational changes</p>
+            </div>
+
+            <div class="alerts-section">
+                <div class="alert-item alert-info">
+                    <strong><i class="fas fa-info-circle"></i> Terminal 2 Update:</strong>
+                    <p>Runway 08R/26L closed for maintenance (10 PM - 5 AM daily)</p>
+                </div>
+
+                <div class="alert-item alert-warning">
+                    <strong><i class="fas fa-exclamation-triangle"></i> Security Notice:</strong>
+                    <p>Enhanced security checks in progress. Allow extra 30 minutes for check-in</p>
+                </div>
+
+                <div class="alert-item alert-success">
+                    <strong><i class="fas fa-check-circle"></i> Weather Update:</strong>
+                    <p>All weather conditions normal. No flight impacts expected</p>
+                </div>
+
+                <div class="alert-item alert-info">
+                    <strong><i class="fas fa-tools"></i> Construction Update:</strong>
+                    <p>Terminal 3 renovation ongoing. Temporary shuttle service active</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== CONTACT & SUPPORT ===== -->
+        <section id="contact">
+            <div class="section-header">
+                <h2><i class="fas fa-headset"></i> Emergency & Support Contact</h2>
+                <p>24/7 assistance and emergency services</p>
+            </div>
+
+            <div class="footer-grid">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-icon">🚨</div>
+                        <h3>Emergency Contacts</h3>
+                        <p><strong>Medical Emergency:</strong> +91-XXXXX-XXXXX</p>
+                        <p><strong>Security:</strong> +91-XXXXX-XXXXX</p>
+                        <p><strong>Lost & Found:</strong> +91-XXXXX-XXXXX</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-icon">🏛️</div>
+                        <h3>Airport Authority</h3>
+                        <p><a href="https://www.aai.aero" target="_blank" style="color: var(--primary);">
+                            <i class="fas fa-external-link-alt"></i> Airports Authority of India
+                        </a></p>
+                        <p><a href="https://www.aci.aero" target="_blank" style="color: var(--primary);">
+                            <i class="fas fa-external-link-alt"></i> Airports Council International
+                        </a></p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-icon">✈️</div>
+                        <h3>Industry Standards</h3>
+                        <p><a href="https://www.iata.org" target="_blank" style="color: var(--primary);">
+                            <i class="fas fa-external-link-alt"></i> International Air Transport Association
+                        </a></p>
+                        <p><a href="https://www.icao.int" target="_blank" style="color: var(--primary);">
+                            <i class="fas fa-external-link-alt"></i> International Civil Aviation Organization
+                        </a></p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-icon">💬</div>
+                        <h3>Help & Support</h3>
+                        <p><strong>Email:</strong> <a href="mailto:support@mitochondria-dms.com" style="color: var(--primary);">support@mitochondria-dms.com</a></p>
+                        <p><strong>Chat:</strong> Available 24/7</p>
+                        <p><strong>FAQ:</strong> <a href="#faq" style="color: var(--primary);">View FAQs</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h4><i class="fas fa-link"></i> Quick Links</h4>
+                <a href="#airports">Airports</a>
+                <a href="#flights">Flights</a>
+                <a href="#health">Health Services</a>
+                <a href="#transport">Transportation</a>
+            </div>
+            <div class="footer-section">
+                <h4><i class="fas fa-phone"></i> Support</h4>
+                <a href="tel:+91XXXXXXXXXX">Call Support</a>
+                <a href="mailto:support@mitochondria-dms.com">Email Support</a>
+                <a href="#">Live Chat</a>
+                <a href="#">FAQs</a>
+            </div>
+            <div class="footer-section">
+                <h4><i class="fas fa-globe"></i> Company</h4>
+                <a href="#">About Us</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Careers</a>  </div></div>
+    </footer>
+</body>
+</html>
+</html>

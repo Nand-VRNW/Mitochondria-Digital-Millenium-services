@@ -1,0 +1,723 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore and research products from Mitochondria Digital Millenium Services. Compare, analyze, and discover innovations in tech and bio-products.">
+    <meta name="keywords" content="product research, tech gadgets, laptops, smartphones, headphones, comparisons, analytics">
+    <title>Mitochondria Digital Millenium Services | Mitochondria Corporation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0; padding: 0;
+            background: #f5f7fa; color: #222;
+            transition: background 0.3s, color 0.3s;
+        }
+        body.dark-mode {
+            background: #1e1e1e; color: #ddd;
+        }
+        header {
+            background: linear-gradient(135deg, #1fbfff, #fffc2f);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap;
+        }
+        header h1 { margin: 0; font-size: 1.6rem; }
+        header input, select {
+            padding: 0.6rem 1rem;
+            border-radius: 25px; border: none;
+            outline: none; margin-top: .4rem;
+        }
+        nav {
+            background: #fff;
+            padding: 0.5rem 2rem;
+            display: flex; gap: 1rem;
+            justify-content: center; flex-wrap: wrap;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            position: sticky; top: 0; z-index: 10;
+        }
+        body.dark-mode nav { background: #333; box-shadow: 0 2px 6px rgba(255,255,255,0.1); }
+        nav a {
+            text-decoration: none;
+            color: #0078d7;
+            font-weight: 500;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        body.dark-mode nav a { color: #00a2ed; }
+
+        /* Tile Layout */
+        .product-tiles {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+        }
+        .tile {
+            background: white;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        body.dark-mode .tile { background: #333; box-shadow: 0 4px 10px rgba(255,255,255,0.1); }
+        .tile:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+        }
+        .tile img {
+            width: 100%; height: 180px;
+            object-fit: cover;
+        }
+        .tile h3 {
+            margin: 0.8rem; font-size: 1.1rem;
+        }
+        .tile p {
+            margin: 0.8rem; color: #555; font-size: 0.9rem;
+        }
+        body.dark-mode .tile p { color: #bbb; }
+
+        /* Filters */
+        .filters {
+            display: flex; flex-wrap: wrap; gap: 1rem;
+            justify-content: center; margin: 1rem 0;
+            padding: 1rem; background: #fff; border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        body.dark-mode .filters { background: #333; box-shadow: 0 2px 6px rgba(255,255,255,0.1); }
+        .filters label { font-weight: 500; align-self: center; }
+        .filters input[type="range"] { width: 200px; }
+
+        /* Product Details */
+        .product-details {
+            display: none;
+            background: white;
+            margin: 1rem auto; padding: 1.5rem;
+            border-radius: 10px;
+            width: 90%;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        body.dark-mode .product-details { background: #333; box-shadow: 0 0 10px rgba(255,255,255,0.1); }
+        .product-details.active {
+            display: block;
+            animation: slideDown 0.5s ease;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .product-info {
+            display: flex; flex-wrap: wrap;
+            gap: 2rem; align-items: flex-start;
+        }
+        .product-info div {
+            flex: 1; min-width: 300px;
+        }
+        .product-info img {
+            width: 250px; border-radius: 10px;
+        }
+        .gallery {
+            display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;
+        }
+        .gallery img {
+            width: 80px; height: 80px; object-fit: cover; border-radius: 5px; cursor: pointer;
+        }
+        button.add-pic, button.download, button.compare, button.wishlist, button.share {
+            background: linear-gradient(135deg, #0078d7, #00a2ed);
+            color: white;
+            border: none; padding: 0.8rem 1.5rem;
+            border-radius: 25px; font-weight: 600;
+            cursor: pointer; margin: 0.5rem 0.5rem 0 0;
+        }
+        button.add-pic:hover, button.download:hover, button.compare:hover, button.wishlist:hover, button.share:hover {
+            background: #009eff;
+        }
+
+        /* Charts */
+        canvas {
+            width: 100% !important;
+            max-width: 400px;
+            height: 250px !important;
+            margin-top: 1rem;
+        }
+
+        /* Table */
+        table {
+            border-collapse: collapse;
+            width: 100%; margin-top: 1rem;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.7rem;
+            text-align: center;
+        }
+        body.dark-mode th, body.dark-mode td { border-color: #555; }
+        th {
+            background: #0078d7; color: white;
+        }
+        body.dark-mode th { background: #005bb5; }
+
+        /* Reviews */
+        .reviews {
+            margin-top: 2rem;
+        }
+        .review {
+            background: #f9f9f9; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;
+        }
+        body.dark-mode .review { background: #444; }
+        .review-form {
+            margin-top: 1rem;
+        }
+        .review-form textarea {
+            width: 100%; padding: 0.5rem; border-radius: 5px; border: 1px solid #ddd;
+        }
+        body.dark-mode .review-form textarea { background: #555; color: #ddd; border-color: #666; }
+
+        /* Comparison */
+        #comparison {
+            display: none; background: white; padding: 2rem; margin: 2rem auto;
+            width: 90%; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        body.dark-mode #comparison { background: #333; box-shadow: 0 0 10px rgba(255,255,255,0.1); }
+        #comparison.active { display: block; }
+        #comparison table th { text-align: left; }
+
+        /* Research Hub */
+        #research-hub {
+            padding: 2rem; background: #fff; margin: 2rem;
+            border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        body.dark-mode #research-hub { background: #333; box-shadow: 0 2px 6px rgba(255,255,255,0.1); }
+        .article {
+            margin-bottom: 1.5rem; border-bottom: 1px solid #ddd; padding-bottom: 1rem;
+        }
+        body.dark-mode .article { border-color: #555; }
+
+        /* Analytics */
+        #analytics {
+            padding: 2rem; background: #fff; margin: 2rem;
+            border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        body.dark-mode #analytics { background: #333; box-shadow: 0 2px 6px rgba(255,255,255,0.1); }
+        .analytics-chart { max-width: 600px; margin: 0 auto; }
+
+        /* Footer */
+        footer {
+            background: #222; color: #fff;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+        }
+        body.dark-mode footer { background: #111; }
+
+        /* Feedback and Dark Mode */
+        #feedback {
+            position: fixed; bottom: 20px; right: 20px;
+            background: #0078d7; color: #fff;
+            padding: 0.8rem 1.2rem;
+            border-radius: 25px; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        #dark-toggle {
+            position: fixed; bottom: 20px; left: 20px;
+            background: #0078d7; color: #fff;
+            padding: 0.8rem 1.2rem;
+            border-radius: 25px; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Pagination */
+        .pagination {
+            text-align: center; margin: 2rem 0;
+        }
+        .pagination button {
+            padding: 0.5rem 1rem; margin: 0 0.5rem; border: none;
+            background: #0078d7; color: white; border-radius: 5px; cursor: pointer;
+        }
+        .pagination button:disabled { background: #ccc; cursor: not-allowed; }
+
+        /* Wishlist */
+        #wishlist {
+            display: none; background: white; padding: 2rem; margin: 2rem auto;
+            width: 90%; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        body.dark-mode #wishlist { background: #333; box-shadow: 0 0 10px rgba(255,255,255,0.1); }
+        #wishlist.active { display: block; }
+        .wishlist-item { margin-bottom: 1rem; }
+
+        /* Accessibility Focus */
+        :focus { outline: 2px solid #00a2ed; }
+    </style>
+</head>
+
+<body>
+
+<header role="banner">
+    <h1>Mitochondria Digital Millenium Services</h1>
+    <input type="text" id="searchBox" placeholder="🔍 Search product..." aria-label="Search products">
+</header>
+
+<nav role="navigation" aria-label="Main navigation">
+    <a href="#home" onclick="showSection('home')">Home</a>
+    <a href="#products" onclick="showSection('products')">Products</a>
+    <a href="#research-hub" onclick="showSection('research-hub')">Research Hub</a>
+    <a href="#analytics" onclick="showSection('analytics')">Analytics</a>
+    <a href="#contact" onclick="showSection('contact')">Contact</a>
+    <a href="#wishlist" onclick="showSection('wishlist')">Wishlist</a>
+    <a href="#comparison" onclick="showSection('comparison')">Compare</a>
+</nav>
+
+<main id="home" class="section active">
+    <!-- Filters -->
+    <section class="filters" aria-labelledby="filter-heading">
+        <h2 id="filter-heading" style="display: none;">Filters</h2>
+        <label for="sort">Sort by:</label>
+        <select id="sort" aria-label="Sort products by">
+            <option value="price-asc">Price (Low to High)</option>
+            <option value="price-desc">Price (High to Low)</option>
+            <option value="rating">Rating</option>
+            <option value="name">Name</option>
+        </select>
+        <label for="category">Category:</label>
+        <select id="category" aria-label="Filter by category">
+            <option value="all">All</option>
+            <option value="laptop">Laptops</option>
+            <option value="phone">Smartphones</option>
+            <option value="headphones">Headphones</option>
+            <option value="tablet">Tablets</option>
+            <option value="watch">Smartwatches</option>
+            <option value="camera">Cameras</option>
+        </select>
+        <label for="price-range">Price Range: <span id="price-value">$0 - $2000</span></label>
+        <input type="range" id="price-range" min="0" max="2000" value="2000" aria-label="Maximum price filter">
+    </section>
+
+    <!-- Product Tiles (Added more products for plenty) -->
+    <section class="product-tiles" id="tiles" role="region" aria-label="Product listings">
+        <div class="tile" data-name="laptop" data-category="laptop" data-price="899.99" data-rating="4.8" onclick="showDetails('prod1')">
+            <img src="https://source.unsplash.com/featured/?laptop" alt="Zebronics 4GDDR3 Laptop Product Image">
+            <h3>Zebronics 4GDDR3 | Powered by NVIDIA</h3>
+            <p>$899.99 • 4.8★ • Affiliate: Amazon</p>
+        </div>
+        <div class="tile" data-name="phone" data-category="phone" data-price="749.99" data-rating="4.6" onclick="showDetails('prod2')">
+            <img src="https://www.google.com/imgres?q=corsair%20SMPS%20adaptor&imgurl=https%3A%2F%2Fassets.corsair.com%2Fimage%2Fupload%2Fc_pad%2Cq_85%2Ch_1100%2Cw_1100%2Cf_auto%2Fproducts%2FAccessories-Parts%2FCP-8920204%2FGallery%2FCP-8920204_01.webp&imgrefurl=https%3A%2F%2Fwww.corsair.com%2Fus%2Fen%2Fp%2Fpc-components-accessories%2Fcp-8920204%2Fsf-series-sfx-to-atx-adapter-bracket-2-0-cp-8920204%3Fsrsltid%3DAfmBOooPAfee9qfocCw-8fHofG1JJY_ul7e0axQ5jBPEwpOu6R-NifHN&docid=Mkw1z-8EvFRV0M&tbnid=2CQZElJfwEhSIM&vet=12ahUKEwiz2cL6g66QAxVtxDgGHe_BKRsQM3oECBUQAA..i&w=1100&h=1100&hcb=2&ved=2ahUKEwiz2cL6g66QAxVtxDgGHe_BKRsQM3oECBUQAA" alt="Galaxy Vision X Smartphone Product Image">
+            <h3>SMPS - CORSAIR adaptor</h3>
+            <p>$749.99 • 4.6★ • Affiliate: eBay</p>
+        </div>
+        <div class="tile" data-name="headphones" data-category="headphones" data-price="129.99" data-rating="4.9" onclick="showDetails('prod3')">
+            <img src="https://source.unsplash.com/featured/?headphones" alt="AudioMax 500 Headphones Product Image">
+            <h3>AudioMax 500</h3>
+            <p>$129.99 • 4.9★ • Affiliate: Flipkart</p>
+        </div>
+        <div class="tile" data-name="tablet" data-category="tablet" data-price="499.99" data-rating="4.7" onclick="showDetails('prod4')">
+            <img src="https://source.unsplash.com/featured/?tablet" alt="TabPro Elite Tablet Product Image">
+            <h3>TabPro Elite</h3>
+            <p>$499.99 • 4.7★ • Affiliate: BestBuy</p>
+        </div>
+        <div class="tile" data-name="watch" data-category="watch" data-price="199.99" data-rating="4.5" onclick="showDetails('prod5')">
+            <img src="https://source.unsplash.com/featured/?smartwatch" alt="FitWatch Pro Smartwatch Product Image">
+            <h3>FitWatch Pro</h3>
+            <p>$199.99 • 4.5★ • Affiliate: Walmart</p>
+        </div>
+        <div class="tile" data-name="camera" data-category="camera" data-price="599.99" data-rating="4.8" onclick="showDetails('prod6')">
+            <img src="https://source.unsplash.com/featured/?camera" alt="CaptureX DSLR Camera Product Image">
+            <h3>CaptureX DSLR</h3>
+            <p>$599.99 • 4.8★ • Affiliate: Amazon</p>
+        </div>
+        <!-- Add more tiles as needed for "plenty" – here up to 6 for example, can extend -->
+        <!-- Placeholder for pagination to handle more -->
+    </section>
+
+    <div class="pagination">
+        <button id="prev-page" disabled>Previous</button>
+        <span id="page-info">Page 1 of 5</span>
+        <button id="next-page">Next</button>
+    </div>
+
+    <!-- Product Details (Enhanced with gallery, reviews, pros/cons, etc.) -->
+    <div id="prod1" class="product-details" role="dialog" aria-modal="true" aria-labelledby="prod1-title">
+        <h2 id="prod1-title">UltraBook Z5</h2>
+        <div class="product-info">
+            <div>
+                <img src="https://source.unsplash.com/featured/?laptop" alt="UltraBook Z5 Laptop" id="main-img1">
+                <div class="gallery">
+                    <img src="https://source.unsplash.com/featured/?laptop,side" alt="Side view" onclick="changeImage('main-img1', this.src)">
+                    <img src="https://source.unsplash.com/featured/?laptop,back" alt="Back view" onclick="changeImage('main-img1', this.src)">
+                </div>
+                <button class="add-pic">🖼 Add Picture</button>
+                <button class="download" onclick="downloadTable('table1')">⬇ Export CSV</button>
+                <button class="compare" onclick="addToCompare('prod1')">🔄 Add to Compare</button>
+                <button class="wishlist" onclick="addToWishlist('UltraBook Z5')">❤️ Add to Wishlist</button>
+                <button class="share" onclick="shareProduct('UltraBook Z5')">📤 Share</button>
+            </div>
+            <div>
+                <p>The UltraBook Z5 is a premium laptop with blazing-fast SSD, 16GB RAM, and AI-integrated cooling system.</p>
+                <h3>Pros & Cons</h3>
+                <ul>
+                    <li>Pros: Lightweight, Long battery, Powerful GPU</li>
+                    <li>Cons: High price, Limited ports</li>
+                </ul>
+                <h3>Specifications</h3>
+                <table id="table1">
+                    <tr><th>Feature</th><th>Details</th></tr>
+                    <tr><td>Processor</td><td>Intel i7 13th Gen</td></tr>
+                    <tr><td>Storage</td><td>1TB NVMe SSD</td></tr>
+                    <tr><td>Battery</td><td>12 hours</td></tr>
+                    <tr><td>Display</td><td>15.6" OLED</td></tr>
+                </table>
+                <h3>Price History</h3>
+                <canvas id="price-chart1"></canvas>
+                <h3>Affiliate Links</h3>
+                <a href="https://amazon.com" target="_blank" rel="noopener">Buy on Amazon</a> | <a href="https://bestbuy.com" target="_blank" rel="noopener">Buy on BestBuy</a>
+            </div>
+        </div>
+        <canvas id="chart1"></canvas>
+        <section class="reviews">
+            <h3>User Reviews</h3>
+            <div class="review">
+                <p><strong>John D.</strong> - 5★: Excellent performance!</p>
+            </div>
+            <div class="review-form">
+                <textarea placeholder="Write your review..."></textarea>
+                <button onclick="submitReview()">Submit Review</button>
+            </div>
+        </section>
+        <section>
+            <h3>Related Products</h3>
+            <div class="related-tiles" style="display: flex; gap: 1rem;">
+                <div class="tile small" onclick="showDetails('prod4')">
+                    <img src="https://source.unsplash.com/featured/?tablet" alt="Related Tablet">
+                    <h4>TabPro Elite</h4>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h3>Q&A</h3>
+            <div class="qa">
+                <p><strong>Q:</strong> Does it support 4K? <strong>A:</strong> Yes.</p>
+            </div>
+            <form>
+                <input type="text" placeholder="Ask a question...">
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+    </div>
+
+    <!-- Similar enhancements for other products – abbreviated for brevity -->
+    <div id="prod2" class="product-details" role="dialog" aria-modal="true" aria-labelledby="prod2-title">
+        <h2 id="prod2-title">Galaxy Vision X</h2>
+        <!-- Similar structure: info, gallery, buttons, pros/cons, specs, price chart, affiliates, reviews, related, Q&A -->
+        <div class="product-info">
+            <div>
+                <img src="https://source.unsplash.com/featured/?smartphone" alt="Galaxy Vision X Smartphone" id="main-img2">
+                <div class="gallery">
+                    <img src="https://source.unsplash.com/featured/?smartphone,side" alt="Side view" onclick="changeImage('main-img2', this.src)">
+                    <img src="https://source.unsplash.com/featured/?smartphone,back" alt="Back view" onclick="changeImage('main-img2', this.src)">
+                </div>
+                <!-- Buttons similar -->
+            </div>
+            <div>
+                <p>Next-gen photography, 120Hz AMOLED, and 5G performance.</p>
+                <h3>Pros & Cons</h3>
+                <ul>
+                    <li>Pros: Great camera, Smooth display</li>
+                    <li>Cons: Battery drains fast</li>
+                </ul>
+                <h3>Specifications</h3>
+                <table id="table2">
+                    <tr><th>Feature</th><th>Details</th></tr>
+                    <tr><td>Camera</td><td>108MP + 48MP</td></tr>
+                    <tr><td>Display</td><td>6.8" AMOLED 120Hz</td></tr>
+                    <tr><td>Battery</td><td>5000mAh</td></tr>
+                </table>
+                <!-- Price history, affiliates, etc. -->
+            </div>
+        </div>
+        <canvas id="chart2"></canvas>
+        <!-- Reviews, related, Q&A similar -->
+    </div>
+
+    <div id="prod3" class="product-details" role="dialog" aria-modal="true" aria-labelledby="prod3-title">
+        <!-- Similar for AudioMax 500 -->
+    </div>
+
+    <div id="prod4" class="product-details" role="dialog" aria-modal="true" aria-labelledby="prod4-title">
+        <!-- For TabPro Elite -->
+    </div>
+
+    <div id="prod5" class="product-details" role="dialog" aria-modal="true" aria-labelledby="prod5-title">
+        <!-- For FitWatch Pro -->
+    </div>
+
+    <div id="prod6" class="product-details" role="dialog" aria-modal="true" aria-labelledby="prod6-title">
+        <!-- For CaptureX DSLR -->
+    </div>
+
+</main>
+
+<section id="research-hub" class="section" style="display: none;">
+    <h2>Research Hub</h2>
+    <div class="article">
+        <h3>Latest in AI Cooling Systems</h3>
+        <p>Explore how AI is revolutionizing laptop thermal management...</p>
+    </div>
+    <div class="article">
+        <h3>5G Technology Breakdown</h3>
+        <p>A deep dive into 5G speeds and applications...</p>
+    </div>
+    <!-- More articles -->
+    <form>
+        <input type="text" placeholder="Search articles...">
+        <button type="submit">Search</button>
+    </form>
+</section>
+
+<section id="analytics" class="section" style="display: none;">
+    <h2>Analytics Dashboard</h2>
+    <p>Market trends and product performance metrics.</p>
+    <canvas id="market-chart" class="analytics-chart"></canvas>
+    <h3>Price Comparison Across Affiliates</h3>
+    <table>
+        <tr><th>Product</th><th>Amazon</th><th>eBay</th></tr>
+        <tr><td>UltraBook Z5</td><td>$899</td><td>$910</td></tr>
+        <!-- More rows -->
+    </table>
+</section>
+
+<section id="contact" class="section" style="display: none;">
+    <h2>Contact Us</h2>
+    <form>
+        <label for="name">Name:</label>
+        <input type="text" id="name">
+        <label for="email">Email:</label>
+        <input type="email" id="email">
+        <label for="message">Message:</label>
+        <textarea id="message"></textarea>
+        <button type="submit">Send</button>
+    </form>
+    <div>
+        <h3>Newsletter Signup</h3>
+        <input type="email" placeholder="Your email">
+        <button>Subscribe</button>
+    </div>
+</section>
+
+<section id="comparison" class="section" style="display: none;">
+    <h2>Product Comparison</h2>
+    <table id="compare-table">
+        <tr><th>Feature</th><th>Product 1</th><th>Product 2</th></tr>
+        <!-- Dynamically populated -->
+    </table>
+    <button onclick="clearComparison()">Clear</button>
+</section>
+
+<section id="wishlist" class="section" style="display: none;">
+    <h2>My Wishlist</h2>
+    <div id="wishlist-items"></div>
+    <button onclick="clearWishlist()">Clear Wishlist</button>
+</section>
+
+<footer role="contentinfo">
+    © 2025 Mitochondria Corporation — Mitochondria Digital Millenium Services
+    <div>
+        <a href="#privacy">Privacy Policy</a> | <a href="#terms">Terms of Service</a>
+    </div>
+</footer>
+
+<div id="feedback" onclick="openFeedback()">💬 Feedback</div>
+<div id="dark-toggle" onclick="toggleDarkMode()">🌙 Dark Mode</div>
+
+<!-- Modal for Feedback -->
+<div id="feedback-modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
+    <h3>Provide Feedback</h3>
+    <textarea placeholder="Your thoughts..."></textarea>
+    <button onclick="submitFeedback()">Submit</button>
+    <button onclick="closeModal('feedback-modal')">Close</button>
+</div>
+
+<script>
+// State management
+let currentPage = 1;
+const productsPerPage = 6; // For pagination
+let compareList = [];
+let wishlist = [];
+let reviews = { prod1: [], prod2: [], prod3: [], prod4: [], prod5: [], prod6: [] };
+
+// Show sections
+function showSection(section) {
+    document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+    document.getElementById(section).style.display = 'block';
+}
+
+// Show product details
+function showDetails(id) {
+    document.querySelectorAll('.product-details').forEach(d => d.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: document.getElementById(id).offsetTop - 60, behavior: 'smooth' });
+}
+
+// Image gallery change
+function changeImage(mainId, src) {
+    document.getElementById(mainId).src = src;
+}
+
+// CSV Export
+function downloadTable(id) {
+    const rows = document.querySelectorAll(`#${id} tr`);
+    const csv = [...rows].map(r => [...r.children].map(td => td.textContent).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${id}.csv`;
+    link.click();
+}
+
+// Search functionality
+document.getElementById('searchBox').addEventListener('input', filterProducts);
+
+// Filters
+document.getElementById('sort').addEventListener('change', filterProducts);
+document.getElementById('category').addEventListener('change', filterProducts);
+document.getElementById('price-range').addEventListener('input', e => {
+    document.getElementById('price-value').textContent = `$0 - $${e.target.value}`;
+    filterProducts();
+});
+
+// Unified filter function
+function filterProducts() {
+    const query = document.getElementById('searchBox').value.toLowerCase();
+    const sort = document.getElementById('sort').value;
+    const category = document.getElementById('category').value;
+    const maxPrice = parseFloat(document.getElementById('price-range').value);
+    let tiles = [...document.querySelectorAll('.tile')];
+
+    // Filter by search, category, price
+    tiles = tiles.filter(tile => {
+        const nameMatch = tile.dataset.name.includes(query);
+        const catMatch = category === 'all' || tile.dataset.category === category;
+        const priceMatch = parseFloat(tile.dataset.price) <= maxPrice;
+        return nameMatch && catMatch && priceMatch;
+    });
+
+    // Sort
+    if (sort === 'price-asc') tiles.sort((a,b) => parseFloat(a.dataset.price) - parseFloat(b.dataset.price));
+    if (sort === 'price-desc') tiles.sort((a,b) => parseFloat(b.dataset.price) - parseFloat(a.dataset.price));
+    if (sort === 'rating') tiles.sort((a,b) => parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating));
+    if (sort === 'name') tiles.sort((a,b) => a.dataset.name.localeCompare(b.dataset.name));
+
+    // Display (for pagination, simulate more pages)
+    const start = (currentPage - 1) * productsPerPage;
+    const end = start + productsPerPage;
+    document.querySelectorAll('.tile').forEach(tile => tile.style.display = 'none');
+    tiles.slice(start, end).forEach(tile => tile.style.display = 'block');
+    document.getElementById('page-info').textContent = `Page ${currentPage} of ${Math.ceil(tiles.length / productsPerPage)}`;
+    document.getElementById('prev-page').disabled = currentPage === 1;
+    document.getElementById('next-page').disabled = currentPage === Math.ceil(tiles.length / productsPerPage);
+}
+
+// Pagination
+document.getElementById('prev-page').addEventListener('click', () => { if (currentPage > 1) currentPage--; filterProducts(); });
+document.getElementById('next-page').addEventListener('click', () => { currentPage++; filterProducts(); });
+
+// Comparison
+function addToCompare(id) {
+    if (!compareList.includes(id)) compareList.push(id);
+    if (compareList.length >= 2) updateComparison();
+}
+function updateComparison() {
+    const table = document.getElementById('compare-table');
+    table.innerHTML = '<tr><th>Feature</th>' + compareList.map(id => `<th>${document.getElementById(id).querySelector('h2').textContent}</th>`).join('') + '</tr>';
+    // Add rows dynamically from specs – simplified
+    ['Processor', 'Storage', 'Battery'].forEach(feature => {
+        let row = `<tr><td>${feature}</td>`;
+        compareList.forEach(id => {
+            const spec = document.getElementById(id).querySelector(`table td:first-child[textContent="${feature}"] ~ td`)?.textContent || 'N/A';
+            row += `<td>${spec}</td>`;
+        });
+        table.innerHTML += row + '</tr>';
+    });
+    showSection('comparison');
+}
+function clearComparison() {
+    compareList = [];
+    document.getElementById('compare-table').innerHTML = '';
+    showSection('home');
+}
+
+// Wishlist
+function addToWishlist(name) {
+    if (!wishlist.includes(name)) wishlist.push(name);
+    updateWishlist();
+}
+function updateWishlist() {
+    const items = document.getElementById('wishlist-items');
+    items.innerHTML = wishlist.map(item => `<div class="wishlist-item">${item} <button onclick="removeFromWishlist('${item}')">Remove</button></div>`).join('');
+}
+function removeFromWishlist(name) {
+    wishlist = wishlist.filter(n => n !== name);
+    updateWishlist();
+}
+function clearWishlist() {
+    wishlist = [];
+    updateWishlist();
+}
+
+// Share
+function shareProduct(name) {
+    alert(`Sharing ${name} via social media or email.`);
+    // Could use navigator.share if available
+}
+
+// Reviews
+function submitReview() {
+    alert('Review submitted!');
+    // Add to local reviews array
+}
+
+// Dark Mode
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+}
+
+// Feedback Modal
+function openFeedback() {
+    document.getElementById('feedback-modal').style.display = 'block';
+}
+function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
+}
+function submitFeedback() {
+    alert('Feedback submitted!');
+    closeModal('feedback-modal');
+}
+
+// Chart setup
+const chartConfig = (ctx, type, labels, data, colors) => {
+    new Chart(ctx, {
+        type,
+        data: { labels, datasets: [{ data, backgroundColor: colors, borderWidth: 1 }] },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true } } }
+    });
+};
+chartConfig(document.getElementById('chart1'), 'bar', ['Speed', 'Battery', 'Portability'], [95,85,90], ['#0078d7','#00a2ed','#56d364']);
+chartConfig(document.getElementById('chart2'), 'pie', ['Camera', 'Display', 'Performance'], [88,92,85], ['#009eff','#56d364','#ffcc00']);
+chartConfig(document.getElementById('chart3'), 'bar', ['Bass', 'Treble', 'Comfort'], [90,85,95], ['#ff9800','#00bcd4','#8bc34a']);
+// Additional charts
+chartConfig(document.getElementById('price-chart1'), 'line', ['Jan', 'Feb', 'Mar'], [950, 920, 899], ['#0078d7']);
+// Market chart
+chartConfig(document.getElementById('market-chart'), 'line', ['Q1', 'Q2', 'Q3', 'Q4'], [100, 150, 120, 180], ['#00a2ed']);
+
+// Initial filter
+filterProducts();
+</script>
+
+</body>
+</html>
+```

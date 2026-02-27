@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Gallery | Mitochondria Digital Millennium Services</title>
+  <meta name="description" content="Explore our premium PC builds, custom rigs, software projects & tech creations by Mitochondria Corporation" />
+
+  <!-- Bootstrap 5 + Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <!-- AOS Animation -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+  <!-- PhotoSwipe (modern lightbox - smooth & accessible) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe.min.css" />
+
+  <style>
+    :root {
+      --primary: #ffd000;
+      --dark-bg: #0f0f0f;
+      --dark-surface: #1a1a1a;
+      --dark-text: #e0e0e0;
+      --light-bg: #f8f9fa;
+      --light-surface: #ffffff;
+    }
+    body {
+      transition: background-color 0.5s ease, color 0.5s ease;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background-color: var(--light-bg);
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+    .dark-mode {
+      background-color: var(--dark-bg) !important;
+      color: var(--dark-text) !important;
+    }
+    .dark-mode .bg-light, .dark-mode .card, .dark-mode .navbar,
+    .dark-mode .gallery-filter button, .dark-mode footer {
+      background-color: var(--dark-surface) !important;
+      border-color: #333 !important;
+      color: var(--dark-text) !important;
+    }
+    .dark-mode .text-muted { color: #bbb !important; }
+    .dark-mode .form-control, .dark-mode input { background-color: #222; color: #eee; border-color: #444; }
+
+    /* Page Header - subtle parallax feel */
+    .page-header {
+      background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.85)), url('img/slides/gallery-banner.jpg') center/cover no-repeat fixed;
+      color: white;
+      padding: 140px 20px 100px;
+      text-align: center;
+      border-radius: 0 0 30px 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    .page-header h1 {
+      font-size: clamp(3rem, 9vw, 6rem);
+      font-weight: 900;
+      text-shadow: 0 6px 20px rgba(0,0,0,0.7);
+      letter-spacing: -1px;
+    }
+
+    /* Gallery Filters - micro interaction */
+    .gallery-filter {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 2.5rem;
+    }
+    .gallery-filter button {
+      background: #2a2a2a;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .gallery-filter button:hover {
+      transform: translateY(-4px) scale(1.06);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+    .gallery-filter button.active {
+      background: var(--primary);
+      color: #000;
+      transform: translateY(-4px) scale(1.06);
+      box-shadow: 0 8px 30px rgba(255, 208, 0, 0.45);
+    }
+
+    /* Modern Masonry Gallery - CSS Columns (lightweight replacement for Isotope) */
+    .grid {
+      columns: 4 320px;
+      column-gap: 1.5rem;
+      padding: 0 1rem;
+    }
+    .grid-item {
+      break-inside: avoid;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .grid-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 18px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+      transition: all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+      background: #111;
+    }
+    .gallery-item img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.5s ease;
+      will-change: transform;
+    }
+    .gallery-item:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    }
+    .gallery-item:hover img {
+      transform: scale(1.14);
+      filter: brightness(0.92) contrast(1.08);
+    }
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 60%);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 24px 20px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .gallery-item:hover .gallery-overlay {
+      opacity: 1;
+    }
+    .gallery-overlay h5 {
+      margin: 0 0 8px;
+      font-size: 1.35rem;
+      font-weight: 700;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    }
+    .gallery-overlay p {
+      margin: 0;
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    /* Floating Controls - smoother hover */
+    .floating-controls button {
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .floating-controls button:hover {
+      transform: translateY(-8px) scale(1.15) rotate(8deg);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+    }
+
+    /* Quick Gadgets - glass-like in dark mode */
+    .quick-gadgets {
+      background: linear-gradient(135deg, #667eea88, #764ba288);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: white;
+      border-radius: 24px;
+      padding: 50px 30px;
+      margin: 60px 0;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+    }
+
+    @media (max-width: 992px) { .grid { columns: 3 300px; } }
+    @media (max-width: 768px) { .grid { columns: 2 280px; } }
+    @media (max-width: 576px) { .grid { columns: 1; } }
+  </style>
+</head>
+<body class="bg-light">
+
+  <!-- Floating Controls (unchanged) -->
+  <div class="floating-controls">
+    <button id="darkModeToggle" class="btn btn-warning" title="Dark Mode"><i class="fas fa-moon"></i></button>
+    <button id="printBtn" class="btn btn-info text-white" title="Print"><i class="fas fa-print"></i></button>
+    <button id="shareBtn" class="btn btn-success" title="Share"><i class="fas fa-share-alt"></i></button>
+    <button id="langBtn" class="btn btn-primary" title="Language">EN</button>
+    <button id="narratorBtn" class="btn btn-danger" title="Read Aloud"><i class="fas fa-volume-up"></i></button>
+  </div>
+
+  <!-- Navbar (unchanged) -->
+  <header class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="img/logo.png" alt="Mitochondria Logo" height="45">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="Portfolio mitochodria 2nd part.html">Tech-NEWS ROOM</a></li>
+          <li class="nav-item"><a class="nav-link active" href="portfolio.html">Our Gallery</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Join our Community</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Header -->
+  <section class="page-header" data-aos="fade-down" data-aos-duration="900">
+    <div class="container">
+      <h1>Our Gallery</h1>
+      <p class="lead mt-3 fs-3"> Our Developments • Custom Rigs • Digital Creations</p>
+    </div>
+  </section>
+
+  <!-- Gallery Filters -->
+  <section class="container my-5">
+    <div class="gallery-filter" data-aos="fade-up" data-aos-duration="800">
+      <button class="active" data-filter="*">All</button>
+      <button data-filter=".gaming">Gaming PCs</button>
+      <button data-filter=".workstation">Workstations</button>
+      <button data-filter=".budget">Budget Builds</button>
+      <button data-filter=".rgb">RGB Masterpiece</button>
+      <button data-filter=".mini">Mini PCs</button>
+      <button data-filter=".software">Software Projects</button>
+    </div>
+
+    <!-- Modern CSS Masonry Grid -->
+    <div class="grid">
+      <!-- Example item - repeat with your real images & keep classes -->
+      <div class="grid-item gaming rgb" data-aos="fade-up" data-aos-duration="700">
+        <a href="img/gallery/1.jpg" 
+           class="gallery-item" 
+           data-pswp-width="1200" 
+           data-pswp-height="900"
+           target="_blank">
+          <img src="img/gallery/1.jpg" alt="Gaming PC" loading="lazy" decoding="async">
+          <div class="gallery-overlay">
+            <h5>RTX 4090 Beast Mode</h5>
+            <p>8K Gaming • Liquid Cooled • RGB</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="grid-item workstation" data-aos="fade-up" data-aos-duration="700" data-aos-delay="100">
+        <a href="img/gallery/2.jpg" 
+           class="gallery-item" 
+           data-pswp-width="1200" 
+           data-pswp-height="900"
+           target="_blank">
+          <img src="img/gallery/2.jpg" alt="Workstation" loading="lazy" decoding="async">
+          <div class="gallery-overlay">
+            <h5>Threadripper PRO</h5>
+            <p>128 Cores • 512GB RAM • 8TB NVMe</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Add your other 20–30 items here the same way -->
+      <!-- Keep data-aos if you want staggered entrance -->
+
+    </div>
+  </section>
+
+  <!-- Quick Gadgets (slightly enhanced glass effect) -->
+  <section class="container">
+    <div class="quick-gadgets text-center" data-aos="zoom-in" data-aos-duration="900">
+      <h2 class="mb-4">Explore More</h2>
+      <div class="d-flex flex-wrap justify-content-center gap-3">
+        <button class="btn btn-light btn-lg" onclick="location.href='nandha.html'"><i class="fas fa-shopping-cart"></i> Shop Builds</button>
+        <button class="btn btn-light btn-lg" onclick="location.href='contact.html'"><i class="fas fa-wrench"></i> Custom Build</button>
+        <button class="btn btn-light btn-lg" onclick="location.href='Portfolio mitochodria 2nd part.html'"><i class="fas fa-newspaper"></i> Tech News</button>
+        <button class="btn btn-light btn-lg" onclick="location.href='contact.html'"><i class="fas fa-envelope"></i> Get Quote</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer (unchanged content) -->
+  <footer class="bg-dark text-white py-5 mt-5">
+    <div class="container">
+      <div class="row g-5">
+        <!-- ... your original footer columns unchanged ... -->
+        <div class="col-lg-3 col-md-6">
+          <h5 class="mb-4 text-warning fw-bold">Get in Touch</h5>
+          <p class="mb-3">
+            <strong>Mitochondria digital Millennium services</strong><br>
+            <small class="text-muted">---</small>Site & Locality : Palayampatti Aruppukottai<br>
+            <small class="text-muted">---</small> 
+            <a href="http://vhnsnc.edu.in/index.php" class="text-white text-decoration-underline hover-glow" target="_blank">
+              <b>Hosted & Developed on<br>: Central Library of VHNSN college</b></br>
+            </a>
+          </p>
+          <p class="mb-0">
+            <i class="fas fa-phone-alt me-2 text-warning"></i> +91 95975 63183<br>
+            <i class="fas fa-envelope me-2 text-warning"></i> 
+            <a href="mailto:Mitochondriadigitalservices@gmail.com" class="text-white hover-glow">
+              Mitochondriadigitalservices@gmail.com
+            </a>
+          </p>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <h5 class="mb-4 text-warning fw-bold">Quick Links</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="https://drive.google.com/file/d/11VTXW3D7GXa2IR34xovytb__pcg8SPvp/view?usp=drive_link" class="text-white hover-glow"><i class="fas fa-angle-right me-2"></i>Terms & Conditions</a></li>
+            <li class="mb-2"><a href="https://drive.google.com/file/d/11VTXW3D7GXa2IR34xovytb__pcg8SPvp/view?usp=drive_link" class="text-white hover-glow"><i class="fas fa-angle-right me-2"></i>Disclaimer</a></li>
+            <li class="mb-2"><a href="https://drive.google.com/file/d/11VTXW3D7GXa2IR34xovytb__pcg8SPvp/view?usp=drive_link" class="text-white hover-glow"><i class="fas fa-angle-right me-2"></i>Affiliate Online Business Policy</a></li>
+            <li class="mb-2"><a href="https://docs.google.com/forms/d/e/1FAIpQLScPHe5qM2wbVKaUEHQ8U-kWh3mfHVMLL3B6BBTIasX5ltqusQ/viewform?usp=header" class="text-white hover-glow"><i class="fas fa-angle-right me-2"></i>Feedback</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <h5 class="mb-4 text-warning fw-bold">News, Economics & Business</h5>
+          <ul class="list-unstyled small">
+            <li class="mb-2"><a href="https://mitochondriadigitalmilleniumservices.blogspot.com/2025/10/0-todays-us-economic-highlights-wsj.html" class="text-white hover-glow">Today's US Economic Highlights (Oct 9, 2025)</a></li>
+            <li class="mb-2"><a href="https://mitochondriadigitalmilleniumservices.blogspot.com/2025/10/todays-tech-highlights-october-9-2025.html" class="text-white hover-glow">NVIDIA, SpaceX, Oracle & more...</a></li>
+            <li class="mb-2"><a href="https://mitochondriadigitalmilleniumservices.blogspot.com/p/your-inner-inventor-fresh-diy.html" class="text-white hover-glow">Fresh DIY Electrical Sparks – Oct 2025</a></li>
+            <li class="mb-2"><a href="https://drive.google.com/file/d/1b85kGOVqdm-Ptr5RhBb36RgDT6z_K9oK/view?usp=sharing" class="text-white hover-glow">Mitochondria Internet Archives</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <h5 class="mb-4 text-warning fw-bold">Visit Our Channels</h5>
+          <ul class="list-unstyled">
+            <li class="mb-3">
+              <a href="https://youtube.com/@techfjordchannel?si=twpivogapypm_ZCY" class="text-white hover-glow d-block">
+                <i class="fab fa-youtube text-danger me-2"></i> Tech-Fjord Channel
+              </a>
+            </li>
+            <li class="mb-3">
+              <a href="https://youtube.com/@mr.manmithvlogs4324?si=uNFMaocArp3ZjONb" class="text-white hover-glow d-block">
+                <i class="fab fa-youtube text-danger me-2"></i> Mr.Manmith Vlogs
+              </a>
+            </li>
+          </ul>
+
+          <div class="mt-4">
+            <h6 class="text-warning mb-3">Follow Us</h6>
+            <a href="#" class="text-white me-3 fs-4 hover-glow"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="text-white me-3 fs-4 hover-glow"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-white me-3 fs-4 hover-glow"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="text-white me-3 fs-4 hover-glow"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-white fs-4 hover-glow"><i class="fab fa-pinterest"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <hr class="my-5 border-secondary">
+
+      <div class="row align-items-center">
+        <div class="col-md-6 text-center text-md-start">
+          <p class="mb-0 small">
+            © 2026 <strong>Mitochondria Corporation</strong> ALL RIGHTS RESERVED includes LOGO and Branding names.<br>
+            Powered by <a href="https://drive.google.com/file/d/1LnOBGp3FzNR6ulYiUOwB15M2O8BoSBk2/view?usp=drive_link" target="_blank" class="text-warning hover-glow text-decoration-underline">Mitochondria Digital Millennium Services</a>
+          </p>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+          <a href="#" class="btn btn-outline-warning btn-sm rounded-pill px-4 scrollup">
+            Back to Top
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+  <!-- PhotoSwipe (core + lightbox init) -->
+  <script type="module">
+    import PhotoSwipeLightbox from 'https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe-lightbox.esm.min.js';
+    const lightbox = new PhotoSwipeLightbox({
+      gallery: '.grid',
+      children: 'a',
+      pswpModule: () => import('https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe.esm.min.js')
+    });
+    lightbox.init();
+  </script>
+
+  <script>
+    AOS.init({ once: true, duration: 800, offset: 60 });
+
+    // Dark Mode Toggle
+    document.getElementById('darkModeToggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const icon = document.querySelector('#darkModeToggle i');
+      icon.classList.toggle('fa-moon');
+      icon.classList.toggle('fa-sun');
+    });
+
+    // Print, Share, Language, Narrator (unchanged)
+    document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+    document.getElementById('shareBtn').addEventListener('click', async () => {
+      if (navigator.share) {
+        try { await navigator.share({ title: document.title, url: window.location.href }); }
+        catch(err) { alert('Sharing canceled'); }
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert('Link copied to clipboard!');
+      }
+    });
+
+    document.getElementById('langBtn').addEventListener('click', function() {
+      this.textContent = this.textContent === 'EN' ? 'TA' : 'EN';
+    });
+
+    let utterance;
+    document.getElementById('narratorBtn').addEventListener('click', () => {
+      if ('speechSynthesis' in window) {
+        if (speechSynthesis.speaking) {
+          speechSynthesis.cancel();
+        } else {
+          const text = document.body.innerText;
+          utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = 'en-US';
+          utterance.rate = 0.9;
+          speechSynthesis.speak(utterance);
+        }
+      }
+    });
+
+    // Back to Top
+    document.querySelector('.scrollup').addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Simple filter simulation (client-side, lightweight)
+    document.querySelectorAll('.gallery-filter button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.gallery-filter button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const filter = btn.getAttribute('data-filter');
+        document.querySelectorAll('.grid-item').forEach(item => {
+          if (filter === '*' || item.classList.contains(filter.slice(1))) {
+            item.style.display = 'block';
+            setTimeout(() => item.classList.add('visible'), 50);
+          } else {
+            item.classList.remove('visible');
+            setTimeout(() => item.style.display = 'none', 600);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
