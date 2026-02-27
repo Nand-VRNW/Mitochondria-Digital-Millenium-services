@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Mitochondria - Real-time flight tracking & passenger health platform"/>
+  <title>Mitochondria | Smart & Healthy Air Travel</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"/>
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+
+  <!-- Flatpickr (better date picker) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
+  <style>
+    :root {
+      --primary:    #0d6efd;
+      --primary-dark:#0b5ed7;
+      --glass-bg:   rgba(255, 255, 255, 0.18);
+      --glass-border:rgba(255, 255, 255, 0.25);
+      --shadow-soft:0 8px 32px rgba(31, 38, 135, 0.15);
+      --blur:       blur(12px);
+      --text-dark:  #1a1f36;
+      --text-muted: #6c757d;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+      color: var(--text-dark);
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background: rgba(13, 110, 253, 0.85) !important;
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .hero {
+      background: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&q=80') center/cover no-repeat;
+      color: white;
+      padding: 9rem 0 7rem;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    }
+
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      box-shadow: var(--shadow-soft);
+      padding: 2.25rem;
+    }
+
+    .flight-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+      overflow: hidden;
+    }
+
+    .flight-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.14);
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+      border: none;
+      transition: all 0.25s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(13,110,253,0.35);
+    }
+
+    #map { height: 420px; border-radius: 16px; overflow: hidden; }
+
+    .form-label {
+      font-weight: 500;
+      color: #374151;
+    }
+
+    .form-check-input:checked {
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    @media (max-width: 767px) {
+      .hero { padding: 6rem 0 4rem; }
+      .glass-card { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold fs-4 d-flex align-items-center" href="#">
+        <i class="bi bi-heart-pulse-fill me-2"></i>Mitochondria
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#flight-tracking">Search</a></li>
+          <li class="nav-item"><a class="nav-link" href="#price-trend">Price Trends</a></li>
+          <li class="nav-item"><a class="nav-link" href="#booking-history">My Trips</a></li>
+          <li class="nav-item"><a class="nav-link" href="#support">Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero text-center">
+    <div class="container">
+      <h1 class="display-4 fw-bold mb-3">Travel Smart.<br>Stay Healthy.</h1>
+      <p class="lead fs-4 mb-4 opacity-90">Real-time flights • Health monitoring • Inclusive travel experience</p>
+      <a href="#flight-tracking" class="btn btn-light btn-lg px-5 py-3 fw-semibold shadow">Start Searching</a>
+    </div>
+  </section>
+
+  <!-- Main Search Section -->
+  <section class="py-5 py-lg-6" id="flight-tracking">
+    <div class="container">
+      <div class="glass-card mx-auto" style="max-width:1100px;">
+        <h2 class="text-center mb-5 fw-bold">Find Your Perfect Flight</h2>
+
+        <form class="row g-3" id="flightSearchForm">
+          <div class="col-12 mb-3">
+            <div class="form-check form-switch d-flex gap-4 justify-content-center flex-wrap">
+              <div>
+                <input class="form-check-input" type="checkbox" id="multiCitySwitch"/>
+                <label class="form-check-label" for="multiCitySwitch">Multi-City Journey</label>
+              </div>
+              <div>
+                <input class="form-check-input" type="checkbox" id="flexibleDates"/>
+                <label class="form-check-label" for="flexibleDates">Flexible Dates (±3 days)</label>
+              </div>
+            </div>
+          </div>
+
+          <div id="flight-legs">
+            <!-- Dynamic legs added here -->
+            <div class="row g-3 flight-leg mb-4 border-bottom pb-4">
+              <div class="col-md-3">
+                <label for="departure-1" class="form-label">From</label>
+                <input type="text" class="form-control" id="departure-1" placeholder="DEL, DXB…" required maxlength="3" aria-describedby="depHelp"/>
+                <div id="depHelp" class="form-text">Airport code</div>
+              </div>
+              <div class="col-md-3">
+                <label for="arrival-1" class="form-label">To</label>
+                <input type="text" class="form-control" id="arrival-1" placeholder="DXB, LHR…" required maxlength="3"/>
+              </div>
+              <div class="col-md-3">
+                <label for="departure-date-1" class="form-label">Date</label>
+                <input type="text" class="form-control flatpickr" id="departure-date-1" placeholder="Select date" required/>
+              </div>
+              <div class="col-md-3 d-flex align-items-end">
+                <button type="button" class="btn btn-outline-secondary add-leg d-none w-100">+ Add Leg</button>
+              </div>
+            </div>
+          </div>
+
+          <datalist id="airport-suggestions"></datalist>
+
+          <div class="col-md-4">
+            <label for="passengers" class="form-label">Passengers</label>
+            <select class="form-select" id="passengers">
+              <option value="1">1 adult</option>
+              <option value="2" selected>2 adults</option>
+              <option value="3">3 adults</option>
+              <option value="4">4+ adults</option>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label for="cabin-class" class="form-label">Class</label>
+            <select class="form-select" id="cabin-class">
+              <option value="economy">Economy</option>
+              <option value="premium-economy">Premium Economy</option>
+              <option value="business">Business</option>
+              <option value="first">First</option>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label for="package-type" class="form-label">Package</label>
+            <select class="form-select" id="package-type">
+              <option value="all">All Services</option>
+              <option value="budget">Budget</option>
+              <option value="up-only">Upgrade Focus</option>
+              <option value="down-only">Downgrade Options</option>
+            </select>
+          </div>
+
+          <!-- Health & Accessibility -->
+          <div class="col-12 mt-4">
+            <h5 class="mb-3">Health & Accessibility Needs</h5>
+            <div class="row g-3">
+              <div class="col-md-4 form-check"><input class="form-check-input" type="checkbox" id="wheelchair"/><label class="form-check-label" for="wheelchair">Wheelchair / Mobility Aid</label></div>
+              <div class="col-md-4 form-check"><input class="form-check-input" type="checkbox" id="deaf"/><label class="form-check-label" for="deaf">Deaf / Hard of Hearing</label></div>
+              <div class="col-md-4 form-check"><input class="form-check-input" type="checkbox" id="oxygen"/><label class="form-check-label" for="oxygen">Medical Oxygen</label></div>
+              <div class="col-md-4 form-check"><input class="form-check-input" type="checkbox" id="mobility"/><label class="form-check-label" for="mobility">Reduced Mobility</label></div>
+              <div class="col-md-4 form-check"><input class="form-check-input" type="checkbox" id="dietary"/><label class="form-check-label" for="dietary">Dietary Requirements</label></div>
+              <div class="col-md-4 form-check"><input class="form-check-input" type="checkbox" id="allergies"/><label class="form-check-label" for="allergies">Allergies</label></div>
+              <div class="col-md-4 form-check"><input class="form-check-input" type="checkbox" id="health-alert"/><label class="form-check-label" for="health-alert">Link Health Profile</label></div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="col-md-6 mt-3">
+            <button type="button" class="btn btn-outline-info w-100" id="connect-wearable">
+              <i class="bi bi-smartwatch me-2"></i>Connect Wearable (HR / SpO₂)
+            </button>
+          </div>
+          <div class="col-md-6 mt-3">
+            <button type="button" class="btn btn-outline-info w-100" id="set-price-alert">
+              <i class="bi bi-bell me-2"></i>Set Price Alert
+            </button>
+          </div>
+
+          <div class="col-12 text-center mt-5">
+            <button type="submit" class="btn btn-primary btn-lg px-5 py-3 fw-semibold">Search Flights</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Loading / Error -->
+      <div id="loading" class="text-center my-5 d-none">
+        <div class="spinner-border text-primary" style="width:3.5rem;height:3.5rem;" role="status"></div>
+        <p class="mt-3 fs-4 fw-medium">Loading real-time flights…</p>
+      </div>
+
+      <div id="errorMsg" class="alert alert-danger mt-5 d-none" role="alert"></div>
+
+      <!-- Results -->
+      <div id="results" class="mt-5 d-none">
+        <h3 class="text-center mb-4 fw-bold">Your Flight Options</h3>
+        <div class="d-flex justify-content-center gap-3 mb-4 flex-wrap">
+          <button class="btn btn-outline-primary filter-btn active" data-filter="all">All</button>
+          <button class="btn btn-outline-primary filter-btn" data-filter="cheapest">Cheapest</button>
+          <button class="btn btn-outline-primary filter-btn" data-filter="fastest">Fastest</button>
+          <button class="btn btn-outline-primary filter-btn" data-filter="accessible">Most Accessible</button>
+        </div>
+        <div class="row g-4" id="flightsList"></div>
+      </div>
+
+      <!-- Live Map -->
+      <div id="map-section" class="mt-5 d-none">
+        <h3 class="text-center mb-4 fw-bold">Live Flight Tracking</h3>
+        <div id="map"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+  <script>
+    // -------------------------------
+    //  AviationStack API Key (replace!)
+    // -------------------------------
+    const AVIATION_KEY = 'YOUR_AVIATIONSTACK_API_KEY';
+
+    let map;
+    let legCount = 1;
+
+    // Flatpickr init
+    flatpickr(".flatpickr", {
+      dateFormat: "Y-m-d",
+      minDate: "today",
+      enableTime: false
+    });
+
+    // Add leg
+    document.getElementById('multiCitySwitch').addEventListener('change', e => {
+      document.querySelector('.add-leg').classList.toggle('d-none', !e.target.checked);
+    });
+
+    document.addEventListener('click', e => {
+      if (e.target.classList.contains('add-leg')) {
+        legCount++;
+        const leg = document.createElement('div');
+        leg.className = 'row g-3 flight-leg mb-4 border-bottom pb-4';
+        leg.innerHTML = `
+          <div class="col-md-3">
+            <label for="departure-${legCount}" class="form-label">From</label>
+            <input type="text" class="form-control" id="departure-${legCount}" placeholder="DEL, DXB…" maxlength="3" required/>
+          </div>
+          <div class="col-md-3">
+            <label for="arrival-${legCount}" class="form-label">To</label>
+            <input type="text" class="form-control" id="arrival-${legCount}" placeholder="DXB, LHR…" maxlength="3" required/>
+          </div>
+          <div class="col-md-3">
+            <label for="departure-date-${legCount}" class="form-label">Date</label>
+            <input type="text" class="form-control flatpickr" id="departure-date-${legCount}" placeholder="Select date" required/>
+          </div>
+          <div class="col-md-3 d-flex align-items-end">
+            <button type="button" class="btn btn-danger remove-leg w-100">Remove</button>
+          </div>
+        `;
+        document.getElementById('flight-legs').appendChild(leg);
+        flatpickr(`#departure-date-${legCount}`, { dateFormat: "Y-m-d", minDate: "today" });
+        leg.querySelector('.remove-leg').onclick = () => leg.remove();
+      }
+    });
+
+    // Form submit → placeholder fetch
+    document.getElementById('flightSearchForm').addEventListener('submit', e => {
+      e.preventDefault();
+      document.getElementById('loading').classList.remove('d-none');
+      document.getElementById('results').classList.add('d-none');
+
+      // In real app → collect all legs, send to backend or API
+      setTimeout(() => {
+        document.getElementById('loading').classList.add('d-none');
+        document.getElementById('results').classList.remove('d-none');
+
+        // Dummy results
+        const list = document.getElementById('flightsList');
+        list.innerHTML = '';
+        for(let i=0; i<4; i++){
+          list.innerHTML += `
+<div class="col-lg-6">
+  <div class="flight-card p-4">
+    <div class="d-flex justify-content-between align-items-start mb-3">
+      <div>
+        <h5 class="mb-1">AI 142 • Air India</h5>
+        <div class="text-muted small">Economy • 2 stops</div>
+      </div>
+      <div class="text-end">
+        <div class="fs-4 fw-bold">$428</div>
+        <div class="badge bg-success">Best Health Match</div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-between mb-2">
+      <div>DEL <small>09:40</small></div>
+      <div class="text-center flex-grow-1"><i class="bi bi-airplane fs-3 mx-3"></i></div>
+      <div class="text-end">DXB <small>16:25</small></div>
+    </div>
+    <hr/>
+    <div class="d-flex justify-content-between small text-muted">
+      <div><i class="bi bi-heart-pulse"></i> Oxygen OK • Wheelchair</div>
+      <div><i class="bi bi-shield-check"></i> High Accessibility</div>
+    </div>
+    <button class="btn btn-primary w-100 mt-3">Select & Book</button>
+  </div>
+</div>`;
+        }
+      }, 1800);
+    });
+
+    // Placeholder for other buttons
+    document.getElementById('connect-wearable')?.addEventListener('click', () => alert('Wearable sync started (demo)'));
+    document.getElementById('set-price-alert')?.addEventListener('click', () => alert('Price alert activated (demo)'));
+  </script>
+</body>
+</html>
